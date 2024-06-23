@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1n11l4
+      POSTGRES_DB: ilevents
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres-ilevents:/var/lib/postgresql/data
+
+
+volumes:
+  postgres-ilevents:
