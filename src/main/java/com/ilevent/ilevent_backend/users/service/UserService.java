@@ -8,7 +8,6 @@ import java.util.List;
 public interface UserService {
     Users register(Users req);
 
-
 //    Users findByEmail(String email);
 //    Users findById (Long id);
 //
