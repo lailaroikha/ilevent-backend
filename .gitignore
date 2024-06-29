@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore key files
+src/main/resources/certs/public-key.pem
+src/main/resources/certs/private-key.pem
