@@ -16,7 +16,9 @@ public class IleventBackendApplication  {
 
 		SpringApplication.run(IleventBackendApplication.class, args);
 	}
-//	@Override
-//	public void run(String... args) throws
 
+//	@Override
+//	public void run(String... args) throws Exception {
+//		log.info("Ilevent Backend Application started successfully");
+//	}
 }

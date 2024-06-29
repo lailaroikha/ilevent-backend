@@ -48,5 +48,4 @@ public class UserAuth extends Users implements UserDetails {
         return true;
     }
 
-
 }

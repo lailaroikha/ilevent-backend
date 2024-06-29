@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -40,13 +41,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
     @Override
-    public Users profile(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found")) ;
+    public Users findByEmail(String email) {
+        return null;
     }
 
+    @Override
+    public List<Users> findAll() {
+        return List.of();
+    }
 
+    @Override
+    public Users profile() {
+        return null;
+    }
 
 
 }

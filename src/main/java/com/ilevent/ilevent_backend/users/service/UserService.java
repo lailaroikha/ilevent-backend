@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface UserService {
     Users register(RegisterRequestDto req);
+    Users findByEmail(String email);
 
-    Users profile(String email);
-
+    List<Users> findAll();
+    Users profile();
 
 }
