@@ -1,7 +1,9 @@
 package com.ilevent.ilevent_backend.users.controller;
 
+import com.ilevent.ilevent_backend.users.dto.RegisterRequestDto;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,13 +15,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/profile/{email}")
-    public Users profile(@PathVariable String email) {
-        return userService.profile(email);
+    @GetMapping("/profile/update")
+    public ResponseEntity<?> updateProfile(@RequestBody RegisterRequestDto registerRequestDto) {
+        return null;
     }
 
     @PostMapping("/register")
-    public Users register(@RequestBody Users req) {
-        return userService.register(req);
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDto registerRequestDto) {
+        return null;
     }
 }
