@@ -1,4 +1,4 @@
-package com.ilevent.ilevent_backend.event.entity;
+package com.ilevent.ilevent_backend.events.entity;
 
 
 import com.ilevent.ilevent_backend.users.entity.Users;
@@ -12,8 +12,8 @@ import java.time.Instant;
 @Setter
 @Getter
 @Entity
-@Table(name = "event", schema = "ilevent")
-public class Event {
+@Table(name = "events", schema = "ilevent")
+public class Events {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,18 +40,12 @@ public class Event {
     @Column(nullable = false, length = 255)
     private String location;
 
-    @Column(columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
-    private BigDecimal price;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isPaid;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Instant createdAt;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Instant updatedAt;
-
-
 
 }
