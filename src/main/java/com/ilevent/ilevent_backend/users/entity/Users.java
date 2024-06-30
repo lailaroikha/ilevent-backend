@@ -46,7 +46,7 @@ public class Users {
     @Column(name = "picture", length = Integer.MAX_VALUE)
     private String picture;
 
-    @Column(name = "referral_code", unique = true, length = 20)
+    @Column(name = "referral_code", unique = true, length = 5)
     private String referralCode;
 
     @Column(name = "points",columnDefinition = "int default 0")

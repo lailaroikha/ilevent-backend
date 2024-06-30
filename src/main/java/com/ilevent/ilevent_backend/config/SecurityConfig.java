@@ -41,7 +41,6 @@ public class SecurityConfig {
     public SecurityConfig(RsaKeyConfigProperties rsaKeyConfigProperties, UserDetailsServiceImpl userDetailsService) {
         this.rsaKeyConfigProperties = rsaKeyConfigProperties;
         this.userDetailsService = userDetailsService;
-
     }
 
     @Bean

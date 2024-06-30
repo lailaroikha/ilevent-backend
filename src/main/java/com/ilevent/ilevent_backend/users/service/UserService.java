@@ -9,8 +9,9 @@ import java.util.List;
 public interface UserService {
     Users register(RegisterRequestDto req);
     Users findByEmail(String email);
-
+    Users findById(Long id);
     List<Users> findAll();
+    void deleteById(Long id);
     Users profile();
 
 }
