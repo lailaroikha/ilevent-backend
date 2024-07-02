@@ -1,6 +1,6 @@
 package com.ilevent.ilevent_backend.auth.service.impl;
 
-import com.ilevent.ilevent_backend.auth.repository.AuthRedisRepository;
+//import com.ilevent.ilevent_backend.auth.repository.AuthRedisRepository;
 import com.ilevent.ilevent_backend.auth.service.AuthService;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import lombok.extern.java.Log;
@@ -22,13 +22,15 @@ public class AuthServiceImpl implements AuthService {
     private final JwtEncoder jwtEncoder;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final AuthRedisRepository authRedisRepository;
+//    private final AuthRedisRepository authRedisRepository;
 
-    public AuthServiceImpl(JwtEncoder jwtEncoder, PasswordEncoder passwordEncoder, UserRepository userRepository, AuthRedisRepository authRedisRepository) {
+    public AuthServiceImpl(JwtEncoder jwtEncoder, PasswordEncoder passwordEncoder, UserRepository userRepository
+//                           AuthRedisRepository authRedisRepository
+    ) {
         this.jwtEncoder = jwtEncoder;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.authRedisRepository = authRedisRepository;
+//        this.authRedisRepository = authRedisRepository;
 
     }
 
@@ -40,11 +42,11 @@ public class AuthServiceImpl implements AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
-        var existingKey = authRedisRepository.getJwtKey(authentication.getName());
-        if (existingKey != null) {
-            log.info("Token already exists for user: " + authentication.getName());
-            return "";
-        }
+//        var existingKey = authRedisRepository.getJwtKey(authentication.getName());
+//        if (existingKey != null) {
+//            log.info("Token already exists for user: " + authentication.getName());
+//            return "";
+//        }
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
@@ -55,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         var jwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-        authRedisRepository.saveJwtKey(authentication.getName(), jwt);
+//        authRedisRepository.saveJwtKey(authentication.getName(), jwt);
         return jwt;
     }
 }

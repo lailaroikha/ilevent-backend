@@ -1,6 +1,7 @@
 package com.ilevent.ilevent_backend.users.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -21,13 +22,21 @@ public class Users {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(max = 50)
+
     @NotNull
-    @Column(name = "username", nullable = false, length = 50)
+    @NotBlank
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @NotBlank
+    @NotNull
+    @Column(name = "username")
+    private String username;
+
 
     @Size(max = 100)
     @NotNull
+    @NotBlank
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
@@ -36,6 +45,7 @@ public class Users {
 
     @Size(max = 100)
     @NotNull
+    @NotBlank
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
@@ -46,7 +56,7 @@ public class Users {
     @Column(name = "picture", length = Integer.MAX_VALUE)
     private String picture;
 
-    @Column(name = "referral_code", unique = true, length = 5)
+    @Column(name = "referral_code", length = 5)
     private String referralCode;
 
     @Column(name = "points",columnDefinition = "int default 0")
@@ -64,7 +74,7 @@ public class Users {
     private Instant deletedAt;
 
 
-//    update data before create data
+    //    update data before create data
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();

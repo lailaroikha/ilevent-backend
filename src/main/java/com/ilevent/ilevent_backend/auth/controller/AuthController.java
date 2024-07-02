@@ -5,6 +5,8 @@ import com.ilevent.ilevent_backend.auth.dto.LoginResponseDto;
 import com.ilevent.ilevent_backend.auth.service.AuthService;
 import com.ilevent.ilevent_backend.auth.entity.UserAuth;
 import com.ilevent.ilevent_backend.auth.dto.LoginRequestDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.extern.java.Log;
 import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +35,7 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto userLogin) throws IllegalAccessException {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto userLogin) throws IllegalAccessException {
         log.info("User login request received for user: " + userLogin.getEmail());
         Authentication authentication =
                 authenticationManager
@@ -56,6 +58,13 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        // Implementasi logout di sini, misalnya menghapus token atau sesi
+        //cookie time 0 or remove
+        return ResponseEntity.ok("Logout successful");
     }
 
 

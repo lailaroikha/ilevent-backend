@@ -27,10 +27,14 @@ public class RegisterRequestDto implements Serializable {
     @Size(max=20, message = "Referral code must be less than 20 character")
     private String referralCode;
 
+    @NotBlank (message = "Username is required")
+    private String username;
+
 
     public Users toEntity() {
         Users users =new Users();
         users.setName(name);
+        users.setUsername(username);
         users.setEmail(email);
         users.setPassword(password);
         users.setReferralCode(referralCode);

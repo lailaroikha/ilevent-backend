@@ -18,6 +18,11 @@ public class UserAuth extends Users implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return users.getPassword();
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(()-> "Role_USER");
@@ -26,8 +31,9 @@ public class UserAuth extends Users implements UserDetails {
 
     @Override
     public String getUsername() {
-        return users.getPassword();
+        return users.getEmail();
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

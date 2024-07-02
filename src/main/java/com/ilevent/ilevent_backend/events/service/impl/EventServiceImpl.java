@@ -1,24 +1,30 @@
 package com.ilevent.ilevent_backend.events.service.impl;
 
+import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
-import com.ilevent.ilevent_backend.events.repository.EventsRepository;
-import com.ilevent.ilevent_backend.events.service.EventsService;
+import com.ilevent.ilevent_backend.events.repository.EventRepository;
+import com.ilevent.ilevent_backend.events.service.EventService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EventsServiceImpl implements EventsService {
-    private final EventsRepository eventsRepository;
+public class EventServiceImpl implements EventService {
+    private final EventRepository eventsRepository;
 
-    public EventsServiceImpl(EventsRepository eventsRepository){
+    public EventServiceImpl(EventRepository eventsRepository){
         this.eventsRepository = eventsRepository;
     }
 
     @Override
-    public Events createEvent(Events event) {
-        return eventsRepository.save(event);
+    public Events createEvent(CreateEventRequestDto dto) {
+        Events events = new Events();
+        events.setName(dto.getName());
+        events.setDescription(dto.getDescription());
+        events.setDate(Instant.parse(dto.getDate()));
+        return eventsRepository.save(events);
     }
 
     @Override
