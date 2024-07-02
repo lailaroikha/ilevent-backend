@@ -8,7 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Setter
 @Getter
@@ -22,7 +23,7 @@ public class Events {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotNull
+
     @ManyToOne
     @JoinColumn(name = "organizer_id", nullable = false)
     private Users organizer;
@@ -36,33 +37,51 @@ public class Events {
 
     @NotNull
     @Column(nullable = false)
-    private Instant date;
+    private LocalDate date;
 
     @NotNull
     @Column(nullable = false)
-    private Instant time;
+    private LocalTime time;
 
-    @NotNull
+
     @Column(nullable = false)
     private String location;
 
     @NotNull
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    @Column(nullable = false, name="created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Instant createdAt;
 
     @NotNull
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
+    @Column(nullable = false, name="updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Instant updatedAt;
 
     @NotNull
     @Column(nullable = false)
     private String image;
 
     @ColumnDefault("false")
-    @Column(name = "is_paid")
-    private Boolean isPaid;
+    @Column(name = "is_freeEvent")
+    private Boolean isFreeEvent;
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    //    update data before create data
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
+
+    //    sebelum di remove
+    @PreRemove
+    protected void onDelete () {
+        deletedAt = Instant.now();
+    }
 
 }

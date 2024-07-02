@@ -6,6 +6,7 @@ import com.ilevent.ilevent_backend.auth.service.AuthService;
 import com.ilevent.ilevent_backend.auth.entity.UserAuth;
 import com.ilevent.ilevent_backend.auth.dto.LoginRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.java.Log;
 import jakarta.servlet.http.Cookie;
@@ -61,9 +62,23 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         // Implementasi logout di sini, misalnya menghapus token atau sesi
         //cookie time 0 or remove
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("sid".equals(cookie.getName())) {
+                    // Set time cookie
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/"); //
+                    // add cookie to response
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
+
         return ResponseEntity.ok("Logout successful");
     }
 

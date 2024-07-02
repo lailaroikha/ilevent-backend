@@ -1,13 +1,6 @@
 package com.ilevent.ilevent_backend.events.dto;
 
-import com.ilevent.ilevent_backend.events.entity.Events;
-import lombok.Data;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-@Data
-public class CreateEventRequestDto {
+public class CreateEventResponseDto {
     private Long organizerId;
     private String name;
     private String description;
@@ -18,5 +11,4 @@ public class CreateEventRequestDto {
     private String category;
     private String organizer;
     private Boolean isFreeEvent;
-
 }

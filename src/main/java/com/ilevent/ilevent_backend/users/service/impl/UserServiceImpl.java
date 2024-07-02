@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users register(RegisterRequestDto user) {
-        Users newUser = user.toEntity();
+        Users newUser = user.toEntity(); // Convert DTO to entity
         var password = passwordEncoder.encode(user.getPassword());
         newUser.setPassword(password);
         // Set role
