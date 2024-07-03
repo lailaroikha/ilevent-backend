@@ -8,7 +8,7 @@ import com.ilevent.ilevent_backend.events.entity.Events;
 import java.util.List;
 
 public interface EventService {
-    Events createEvent(CreateEventRequestDto dto);
+    CreateEventResponseDto createEvent(CreateEventRequestDto dto);
     Events updateEvent(Events event);
     Events getEventById(Long id);
     void deletedEvent(Long id);

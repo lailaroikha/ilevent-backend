@@ -1,16 +1,20 @@
 package com.ilevent.ilevent_backend.events.service.impl;
 
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
+import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
+
 import java.time.LocalTime;
 
 @Service
@@ -24,7 +28,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Events createEvent(CreateEventRequestDto dto) {
+    public CreateEventResponseDto createEvent(CreateEventRequestDto dto) {
         Events events = new Events();
         events.setName(dto.getName());
         events.setDescription(dto.getDescription());
@@ -42,7 +46,9 @@ public class EventServiceImpl implements EventService {
         events.setLocation(dto.getLocation());
         events.setIsFreeEvent(dto.getIsFreeEvent());
         events.setImage(dto.getImageUrl());
-        return eventsRepository.save(events);
+        eventsRepository.save(events);
+
+        return CreateEventResponseDto.fromEntity(events);
 
     }
 
@@ -59,8 +65,6 @@ public class EventServiceImpl implements EventService {
             throw new RuntimeException("Event not found with id" + event.getId());
         }
     }
-
-
 
     @Override
     public Events getEventById(Long id) {

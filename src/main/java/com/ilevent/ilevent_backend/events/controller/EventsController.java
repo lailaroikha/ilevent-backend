@@ -1,7 +1,6 @@
 package com.ilevent.ilevent_backend.events.controller;
 
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
-import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.responses.Response;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,8 @@ public class EventsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
         eventService.createEvent(createEventRequestDto);
-        return ResponseEntity.ok("Event created successfully");
+        return Response.success("Event created successfully", eventService.createEvent(createEventRequestDto));
     }
 }

@@ -33,6 +33,10 @@ public class EventCategory {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", columnDefinition = "event_category_type not null")
+    private EventCategoryType category;
+
 /*
  TODO [Reverse Engineering] create field to map the 'category' column
  Available actions: Define target Java type | Uncomment as is | Remove column mapping
@@ -40,3 +44,4 @@ public class EventCategory {
     private Object category;
 */
 }
+
