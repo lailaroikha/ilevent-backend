@@ -1,7 +1,6 @@
 package com.ilevent.ilevent_backend.events.dto;
 
 import com.ilevent.ilevent_backend.eventcategory.entity.EventCategory;
-import io.swagger.models.auth.In;
 import lombok.Data;
 @Data
 public class CreateEventRequestDto {
@@ -14,6 +13,6 @@ public class CreateEventRequestDto {
     private String image;
     private String organizer;
     private Boolean isFreeEvent;
-    private EventCategory  eventCategoriesId;
+    private String categories;
 
 }

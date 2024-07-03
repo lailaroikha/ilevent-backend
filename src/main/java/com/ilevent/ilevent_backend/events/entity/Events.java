@@ -67,10 +67,11 @@ public class Events {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_categories_id")
-    private EventCategory eventCategoriesId;
+//    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "event_categories_id")
+//    private EventCategory eventCategoriesId;
+
 
     //    update data before create data
     @PrePersist
@@ -89,5 +90,29 @@ public class Events {
     protected void onDelete () {
         deletedAt = Instant.now();
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false, length = 20)
+    private Category category;
+
+
+    public enum Category {
+        music,
+        sports,
+        conference,
+        festival,
+        workshop,
+        seminar,
+        film,
+        arts,
+        business,
+        science,
+        tech,
+        food,
+        exhibition,
+        travel,
+        fashion
+    }
+
 
 }

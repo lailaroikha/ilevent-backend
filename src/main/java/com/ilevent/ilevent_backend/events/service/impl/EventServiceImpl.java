@@ -50,7 +50,6 @@ public class EventServiceImpl implements EventService {
         events.setLocation(dto.getLocation());
         events.setIsFreeEvent(dto.getIsFreeEvent());
         events.setImage(dto.getImage());
-        events.setEventCategoriesId(dto.getEventCategoriesId());
         eventsRepository.save(events);
 
         return CreateEventResponseDto.fromEntity(events);
