@@ -1,6 +1,5 @@
 package com.ilevent.ilevent_backend.events.dto;
 
-import com.ilevent.ilevent_backend.eventcategory.entity.EventCategory;
 import lombok.Data;
 @Data
 public class CreateEventRequestDto {

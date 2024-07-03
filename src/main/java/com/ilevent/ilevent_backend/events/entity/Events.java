@@ -1,7 +1,5 @@
 package com.ilevent.ilevent_backend.events.entity;
 
-
-import com.ilevent.ilevent_backend.eventcategory.entity.EventCategory;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

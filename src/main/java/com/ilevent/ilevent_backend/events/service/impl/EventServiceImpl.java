@@ -1,6 +1,5 @@
 package com.ilevent.ilevent_backend.events.service.impl;
 
-import com.ilevent.ilevent_backend.eventcategory.repository.EventCategoryRepository;
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
 import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
@@ -22,12 +21,11 @@ import java.time.LocalTime;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventsRepository;
     private final UserRepository userRepository;
-    private final EventCategoryRepository eventCategoryRepository;
 
-    public EventServiceImpl(EventRepository eventsRepository, UserRepository userRepository, EventCategoryRepository eventCategoryRepository){
+
+    public EventServiceImpl(EventRepository eventsRepository, UserRepository userRepository){
         this.eventsRepository = eventsRepository;
         this.userRepository=userRepository;
-        this.eventCategoryRepository = eventCategoryRepository;
     }
 
     @Override
