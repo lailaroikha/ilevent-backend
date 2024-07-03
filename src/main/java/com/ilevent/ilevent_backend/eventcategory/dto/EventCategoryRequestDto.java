@@ -12,9 +12,9 @@ import java.time.Instant;
 @Getter
 @Data
 public class EventCategoryRequestDto {
-    private Integer id;
+    @NotNull
     private Long eventId;
+
+    @NotNull
     private EventCategoryType category;
-    private Instant createdAt;
-    private Instant updatedAt;
 }
