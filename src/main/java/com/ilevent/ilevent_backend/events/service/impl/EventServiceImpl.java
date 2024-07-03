@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.events.service.impl;
 
+import com.ilevent.ilevent_backend.eventcategory.repository.EventCategoryRepository;
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
 import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
@@ -21,14 +22,17 @@ import java.time.LocalTime;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventsRepository;
     private final UserRepository userRepository;
+    private final EventCategoryRepository eventCategoryRepository;
 
-    public EventServiceImpl(EventRepository eventsRepository, UserRepository userRepository){
+    public EventServiceImpl(EventRepository eventsRepository, UserRepository userRepository, EventCategoryRepository eventCategoryRepository){
         this.eventsRepository = eventsRepository;
         this.userRepository=userRepository;
+        this.eventCategoryRepository = eventCategoryRepository;
     }
 
     @Override
     public CreateEventResponseDto createEvent(CreateEventRequestDto dto) {
+
         Events events = new Events();
         events.setName(dto.getName());
         events.setDescription(dto.getDescription());
@@ -45,7 +49,8 @@ public class EventServiceImpl implements EventService {
         events.setOrganizer(organizer);
         events.setLocation(dto.getLocation());
         events.setIsFreeEvent(dto.getIsFreeEvent());
-        events.setImage(dto.getImageUrl());
+        events.setImage(dto.getImage());
+        events.setEventCategoriesId(dto.getEventCategoriesId());
         eventsRepository.save(events);
 
         return CreateEventResponseDto.fromEntity(events);

@@ -19,23 +19,25 @@ public class EventCategory {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Events event;
+
 
     @NotNull
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Instant createdAt;
 
     @Column(name = "deleted_at")
     private Integer deletedAt;
     @NotNull
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Instant updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", columnDefinition = "event_category_type not null")
     private EventCategoryType category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Events event;
 
 /*
  TODO [Reverse Engineering] create field to map the 'category' column

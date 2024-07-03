@@ -1,11 +1,8 @@
 package com.ilevent.ilevent_backend.events.dto;
 
-import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.eventcategory.entity.EventCategory;
+import io.swagger.models.auth.In;
 import lombok.Data;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Data
 public class CreateEventRequestDto {
     private Long organizerId;
@@ -14,9 +11,9 @@ public class CreateEventRequestDto {
     private String location;
     private String date;
     private String time;
-    private String imageUrl;
-    private String category;
+    private String image;
     private String organizer;
     private Boolean isFreeEvent;
+    private EventCategory  eventCategoriesId;
 
 }

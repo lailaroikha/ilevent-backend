@@ -1,6 +1,7 @@
 package com.ilevent.ilevent_backend.events.entity;
 
 
+import com.ilevent.ilevent_backend.eventcategory.entity.EventCategory;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -56,7 +57,7 @@ public class Events {
     private Instant updatedAt;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name="image",nullable = false)
     private String image;
 
     @ColumnDefault("false")
@@ -65,6 +66,11 @@ public class Events {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_categories_id")
+    private EventCategory eventCategoriesId;
 
     //    update data before create data
     @PrePersist

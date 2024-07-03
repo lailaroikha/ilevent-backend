@@ -1,7 +1,6 @@
 package com.ilevent.ilevent_backend.events.dto;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
-import com.ilevent.ilevent_backend.users.entity.Users;
 import lombok.Data;
 
 @Data
@@ -15,6 +14,7 @@ public class CreateEventResponseDto {
     private String imageUrl;
     private String organizer;
     private Boolean isFreeEvent;
+    private Integer eventCategoriesId;
 
     public static CreateEventResponseDto fromEntity(Events events){
         CreateEventResponseDto dto = new CreateEventResponseDto();
@@ -27,6 +27,7 @@ public class CreateEventResponseDto {
         dto.setImageUrl(events.getImage());
         dto.setOrganizer(events.getOrganizer().getName());
         dto.setIsFreeEvent(events.getIsFreeEvent());
+        dto.setEventCategoriesId(events.getEventCategoriesId().getId());
         return dto;
     }
 }
