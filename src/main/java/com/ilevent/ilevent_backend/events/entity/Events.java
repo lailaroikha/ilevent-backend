@@ -65,12 +65,6 @@ public class Events {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "event_categories_id")
-//    private EventCategory eventCategoriesId;
-
-
     //    update data before create data
     @PrePersist
     protected void onCreate() {
@@ -92,7 +86,6 @@ public class Events {
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 20)
     private Category category;
-
 
     public enum Category {
         music,
