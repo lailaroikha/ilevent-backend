@@ -23,11 +23,11 @@ public class Referral {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users user;
+    private Users userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "referred_user_id")
-    private Users referredUser;
+    private Users referredUserId;
 
     @ColumnDefault("10000")
     @Column(name = "points")
@@ -47,4 +47,7 @@ public class Referral {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    public void setExpiredAt(LocalDate localDate) {
+    this.expiredAt = localDate;
+    }
 }

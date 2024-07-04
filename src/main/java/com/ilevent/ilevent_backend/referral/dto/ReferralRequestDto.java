@@ -1,12 +1,13 @@
 package com.ilevent.ilevent_backend.referral.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Data
 public class ReferralRequestDto {
-    @NotBlank
-    private String referralCode;
-
-    @NotNull
     private Long userId;
+    private String referralCode;
 }

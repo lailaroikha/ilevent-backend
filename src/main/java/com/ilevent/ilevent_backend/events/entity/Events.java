@@ -47,11 +47,11 @@ public class Events {
     private String location;
 
     @NotNull
-    @Column(nullable = false, name="created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = false, name="created_at")
     private Instant createdAt;
 
     @NotNull
-    @Column(nullable = false, name="updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = false, name="updated_at")
     private Instant updatedAt;
 
     @NotNull

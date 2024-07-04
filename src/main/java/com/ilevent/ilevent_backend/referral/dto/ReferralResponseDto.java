@@ -1,6 +1,8 @@
 package com.ilevent.ilevent_backend.referral.dto;
 
 import com.ilevent.ilevent_backend.referral.entity.Referral;
+import com.ilevent.ilevent_backend.users.entity.Users;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,18 +10,17 @@ import java.time.Instant;
 
 @Getter
 @Setter
+@Data
 public class ReferralResponseDto {
-    private String referralCode;
-    private Long referredUser;
-    private Long user;
+    private Long referredUserId;
+    private Long userId;
     private Integer points;
 
     public static ReferralResponseDto fromEntity(Referral referral) {
-        ReferralResponseDto Dto = new ReferralResponseDto();
-        Dto.setReferralCode(referral.getReferredUser().getReferralCode());
-        Dto.setReferredUser(referral.getReferredUser().getId());
-        Dto.setUser(referral.getUser().getId());
-        Dto.setPoints(referral.getPoints());
-        return Dto;
+        ReferralResponseDto dto = new ReferralResponseDto();
+        dto.setReferredUserId(referral.getReferredUserId().getId());
+        dto.setUserId(referral.getUserId().getId());
+        dto.setPoints(referral.getPoints());
+        return dto;
     }
 }

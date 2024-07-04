@@ -9,6 +9,7 @@ import com.ilevent.ilevent_backend.users.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.List;
 
@@ -33,9 +34,23 @@ public class UserServiceImpl implements UserService {
         // Set timestamps
         newUser.setCreatedAt(Instant.now());
         newUser.setUpdateAt(Instant.now());
+        // Generate and set referral code
+        newUser.setReferralCode(generateReferralCode());
 
         return userRepository.save(newUser);
 
+    }
+
+    private String generateReferralCode() {
+        final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        final int CODE_LENGTH = 6;
+        final SecureRandom secureRandom = new SecureRandom();
+
+        StringBuilder code = new StringBuilder(CODE_LENGTH);
+        for (int i = 0; i < CODE_LENGTH; i++) {
+            code.append(CHARACTERS.charAt(secureRandom.nextInt(CHARACTERS.length())));
+        }
+        return code.toString();
     }
 
     @Override
