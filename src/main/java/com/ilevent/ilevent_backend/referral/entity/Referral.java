@@ -16,13 +16,13 @@ import java.time.LocalDate;
 @Table(name = "referral", schema = "ilevent")
 public class Referral {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "referral_id_gen")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "referral_")
     @SequenceGenerator(name = "referral_id_gen", sequenceName = "referrals_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private Users userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +47,4 @@ public class Referral {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public void setExpiredAt(LocalDate localDate) {
-    this.expiredAt = localDate;
-    }
 }

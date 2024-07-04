@@ -28,7 +28,6 @@ public class Voucher {
     private Events event;
 
     @Size(max = 20)
-    @NotNull
     @Column(name = "discount_code", nullable = false, length = 20)
     private String discountCode;
 
@@ -45,7 +44,7 @@ public class Voucher {
     private Integer used;
 
     @Column(name = "expired_at")
-    private Instant expiredAt;
+    private LocalDate expiredAt;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
@@ -60,6 +59,6 @@ public class Voucher {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Users user;
+    private Users userId;
 
 }
