@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ReferralRepository extends JpaRepository<Referral, Long> {
-    Optional<Referral> findByUserId(Long userId);
+    Referral findReferralByUserId(Long userId);
 }

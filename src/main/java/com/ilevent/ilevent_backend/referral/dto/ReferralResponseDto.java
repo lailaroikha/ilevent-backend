@@ -19,7 +19,7 @@ public class ReferralResponseDto {
     public static ReferralResponseDto fromEntity(Referral referral) {
         ReferralResponseDto dto = new ReferralResponseDto();
         dto.setReferredUserId(referral.getReferredUserId().getId());
-        dto.setUserId(referral.getUserId().getId());
+        dto.setUserId(referral.getUser().getId());
         dto.setPoints(referral.getPoints());
         return dto;
     }

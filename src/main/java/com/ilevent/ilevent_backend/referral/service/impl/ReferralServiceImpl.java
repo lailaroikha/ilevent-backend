@@ -46,7 +46,7 @@ public class ReferralServiceImpl implements ReferralService {
 
         // Save the referral details
         Referral referral = new Referral();
-        referral.setUserId(referrer);
+        referral.setUser(referrer);
         referral.setReferredUserId(newUser.get());
         referral.setPoints(10000);
         referral.setCreatedAt(Instant.now());
@@ -60,7 +60,7 @@ public class ReferralServiceImpl implements ReferralService {
     public Referral getReferralDetails(Long userId) {
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        Optional<Referral> referral = referralRepository.findByUserId(userId);
+        Optional<Referral> referral = Optional.ofNullable(referralRepository.findReferralByUserId(userId));
         return referral.orElseThrow(() -> new IllegalArgumentException("No referral details found for user"));
     }
 

@@ -60,5 +60,4 @@ public class Voucher {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users userId;
-
 }
