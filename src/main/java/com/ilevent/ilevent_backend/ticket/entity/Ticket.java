@@ -1,4 +1,4 @@
-package com.ilevent.ilevent_backend.tickets.entity;
+package com.ilevent.ilevent_backend.ticket.entity;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
 import jakarta.persistence.*;
@@ -18,16 +18,16 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tickets_id_gen")
     @SequenceGenerator(name = "tickets_id_gen", sequenceName = "type_ticket_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    private Events event;
+    private Events eventId;
 
     @Size(max = 50)
     @NotNull
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
+    @Column(name = "name_ticket", nullable = false, length = 50)
+    private String nameTicket;
 
     @NotNull
     @Column(name = "available_seats", nullable = false)
