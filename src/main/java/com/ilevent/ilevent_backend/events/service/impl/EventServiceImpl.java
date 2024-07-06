@@ -7,24 +7,28 @@ import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-
-import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
-
 import java.time.LocalTime;
 
 @Service
 public class EventServiceImpl implements EventService {
-    private final EventRepository eventsRepository;
+    private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-    public EventServiceImpl(EventRepository eventsRepository, UserRepository userRepository){
-        this.eventsRepository = eventsRepository;
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository){
+        this.eventRepository = eventRepository;
         this.userRepository=userRepository;
     }
+
+    @Override
+    public Page<Events> getAllEvents(Pageable pageable) {
+        return null;
+    }
+
 
     @Override
     public CreateEventResponseDto createEvent(CreateEventRequestDto dto) {
@@ -46,37 +50,33 @@ public class EventServiceImpl implements EventService {
         events.setIsFreeEvent(dto.getIsFreeEvent());
         events.setImage(dto.getImage());
         events.setCategory(dto.getCategory());
-        eventsRepository.save(events);
+        eventRepository.save(events);
         return CreateEventResponseDto.fromEntity(events);
     }
 
     @Override
     public Events updateEvent(Events event) {
-        Optional<Events> existingEventOpt = eventsRepository.findById(event.getId());
+        Optional<Events> existingEventOpt = eventRepository.findById(event.getId());
         if (existingEventOpt.isPresent()) {
             Events existingEvent = existingEventOpt.get();
             existingEvent.setName(event.getName());
             existingEvent.setDescription(event.getDescription());
             existingEvent.setDate(event.getDate());
-            return eventsRepository.save(existingEvent);
+            return eventRepository.save(existingEvent);
         }    else {
             throw new RuntimeException("Event not found with id" + event.getId());
         }
     }
 
     @Override
-    public Events getEventById(Long id) {
-        return eventsRepository.findById(id).orElseThrow(()->new RuntimeException("Event not found with id"+id));
+    public CreateEventResponseDto getEventById(Long id) {
+        Events event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found with id " + id));
+        return CreateEventResponseDto.fromEntity(event);
     }
 
     @Override
     public void deletedEvent(Long id) {
-        eventsRepository.deleteById(id);
+        eventRepository.deleteById(id);
     }
-
-    @Override
-    public List<Events> getAllEvents() {
-        return eventsRepository.findAll();
-    }
-
 }

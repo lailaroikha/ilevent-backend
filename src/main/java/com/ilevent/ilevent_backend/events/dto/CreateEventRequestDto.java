@@ -11,7 +11,6 @@ public class CreateEventRequestDto {
     private String date;
     private String time;
     private String image;
-    private String organizer;
     private Boolean isFreeEvent;
     private Events.CategoryType category;
 

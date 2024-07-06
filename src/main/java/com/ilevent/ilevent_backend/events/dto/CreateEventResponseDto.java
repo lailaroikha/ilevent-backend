@@ -12,10 +12,16 @@ public class CreateEventResponseDto {
     private String date;
     private String time;
     private String imageUrl;
-    private String organizer;
     private Boolean isFreeEvent;
     private Integer eventCategoriesId;
     private Events.CategoryType category;
+    private OrganizerDto organizer;
+
+    @Data
+    public static class OrganizerDto {
+        private Long id;
+        private String name;
+    }
 
     public static CreateEventResponseDto fromEntity(Events events){
         CreateEventResponseDto dto = new CreateEventResponseDto();
@@ -26,9 +32,14 @@ public class CreateEventResponseDto {
         dto.setDate(events.getDate().toString());
         dto.setTime(events.getTime().toString());
         dto.setImageUrl(events.getImage());
-        dto.setOrganizer(events.getOrganizer().getName());
         dto.setIsFreeEvent(events.getIsFreeEvent());
         dto.setCategory(events.getCategory());
+
+        OrganizerDto organizerDto = new OrganizerDto();
+        organizerDto.setId(events.getOrganizer().getId());
+        organizerDto.setName(events.getOrganizer().getName());
+        dto.setOrganizer(organizerDto);
+
         return dto;
     }
 }
