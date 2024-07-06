@@ -8,6 +8,6 @@ import com.ilevent.ilevent_backend.users.entity.Users;
 public interface ReferralService {
     ReferralResponseDto applyReferralCode(ReferralRequestDto referralRequestDTO);
     Referral getReferralDetails(Long userId);
-    String generateReferralCode(Users users);
+//    String generateReferralCode(Users users);
 
 }

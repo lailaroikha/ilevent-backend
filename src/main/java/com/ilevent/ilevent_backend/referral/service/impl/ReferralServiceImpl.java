@@ -50,7 +50,7 @@ public class ReferralServiceImpl implements ReferralService {
         referral.setReferredUserId(newUser.get());
         referral.setPoints(10000);
         referral.setCreatedAt(Instant.now());
-        referral.setExpiredAt(LocalDate.now().plusMonths(3));
+//        referral.setExpiredAt(LocalDate.now().plusMonths(3));
         referralRepository.save(referral);
         // Prepare the response using fromEntity method
         return ReferralResponseDto.fromEntity(referral);
@@ -64,17 +64,4 @@ public class ReferralServiceImpl implements ReferralService {
         return referral.orElseThrow(() -> new IllegalArgumentException("No referral details found for user"));
     }
 
-    @Override
-    public String generateReferralCode(Users users) {
-        // Generate a unique referral code
-        String referralCode;
-        do {
-            referralCode = UUID.randomUUID().toString().substring(0, 5).toUpperCase();
-        } while (userRepository.existsByReferralCode(referralCode));
-
-        users.setReferralCode(referralCode);
-        userRepository.save(users);
-
-        return referralCode;
-    }
 }

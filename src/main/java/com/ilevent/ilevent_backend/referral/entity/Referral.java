@@ -33,12 +33,9 @@ public class Referral {
     @Column(name = "points")
     private Integer points;
 
+    @NotNull
     @Column(name = "created_at")
     private Instant createdAt;
-
-    @NotNull
-    @Column(name = "expired_at", nullable = false)
-    private LocalDate expiredAt;
 
     @Column(name = "deleted_at")
     private Instant deletedAt;

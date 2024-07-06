@@ -15,7 +15,7 @@ public class CreateEventResponseDto {
     private String organizer;
     private Boolean isFreeEvent;
     private Integer eventCategoriesId;
-    private String categories;
+    private Events.CategoryType category;
 
     public static CreateEventResponseDto fromEntity(Events events){
         CreateEventResponseDto dto = new CreateEventResponseDto();
@@ -28,7 +28,7 @@ public class CreateEventResponseDto {
         dto.setImageUrl(events.getImage());
         dto.setOrganizer(events.getOrganizer().getName());
         dto.setIsFreeEvent(events.getIsFreeEvent());
-        dto.setCategories(String.valueOf(events.getCategory()));
+        dto.setCategory(events.getCategory());
         return dto;
     }
 }

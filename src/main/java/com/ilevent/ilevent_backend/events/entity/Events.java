@@ -85,9 +85,9 @@ public class Events {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 20)
-    private Category category;
+    private CategoryType category;
 
-    public enum Category {
+    public enum CategoryType {
         music,
         sports,
         conference,

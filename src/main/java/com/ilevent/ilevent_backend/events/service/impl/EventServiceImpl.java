@@ -7,7 +7,6 @@ import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 
@@ -22,7 +21,6 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventsRepository;
     private final UserRepository userRepository;
 
-
     public EventServiceImpl(EventRepository eventsRepository, UserRepository userRepository){
         this.eventsRepository = eventsRepository;
         this.userRepository=userRepository;
@@ -30,7 +28,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public CreateEventResponseDto createEvent(CreateEventRequestDto dto) {
-
         Events events = new Events();
         events.setName(dto.getName());
         events.setDescription(dto.getDescription());
@@ -48,10 +45,9 @@ public class EventServiceImpl implements EventService {
         events.setLocation(dto.getLocation());
         events.setIsFreeEvent(dto.getIsFreeEvent());
         events.setImage(dto.getImage());
+        events.setCategory(dto.getCategory());
         eventsRepository.save(events);
-
         return CreateEventResponseDto.fromEntity(events);
-
     }
 
     @Override

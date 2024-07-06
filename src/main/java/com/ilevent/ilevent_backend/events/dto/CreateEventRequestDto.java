@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.events.dto;
 
+import com.ilevent.ilevent_backend.events.entity.Events;
 import lombok.Data;
 @Data
 public class CreateEventRequestDto {
@@ -12,6 +13,6 @@ public class CreateEventRequestDto {
     private String image;
     private String organizer;
     private Boolean isFreeEvent;
-    private String categories;
+    private Events.CategoryType category;
 
 }
