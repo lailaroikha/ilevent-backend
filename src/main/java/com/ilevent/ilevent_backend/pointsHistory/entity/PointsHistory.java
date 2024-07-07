@@ -18,7 +18,7 @@ public class PointsHistory {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "points_history_id_gen")
     @SequenceGenerator(name = "points_history_id_gen", sequenceName = "points_history_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -9,6 +9,4 @@ public class PointHistoryRequestDto {
     private Long userId;
     private Integer points;
     private String type;
-    private Instant createdAt;
-    private Instant updateAt;
 }

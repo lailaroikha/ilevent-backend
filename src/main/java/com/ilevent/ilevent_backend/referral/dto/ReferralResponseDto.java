@@ -14,13 +14,14 @@ import java.time.Instant;
 public class ReferralResponseDto {
     private Long referredUserId;
     private Long userId;
-    private Integer points;
+    private String referralCode; // The referral code being applied
+
 
     public static ReferralResponseDto fromEntity(Referral referral) {
         ReferralResponseDto dto = new ReferralResponseDto();
         dto.setReferredUserId(referral.getReferredUserId().getId());
         dto.setUserId(referral.getUser().getId());
-        dto.setPoints(referral.getPoints());
+        dto.setReferralCode(String.valueOf(referral.getReferredUserId().getId())); // The referral code being applied
         return dto;
     }
 }

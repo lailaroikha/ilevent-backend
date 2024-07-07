@@ -49,6 +49,9 @@ public class Users {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
+    @Column(name = "total_points", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer totalPoints;
+
     @Size(max = 15)
     @Column(name = "phone", length = 15)
     private String phone;
@@ -59,8 +62,8 @@ public class Users {
     @Column(name = "referral_code")
     private String referralCode;
 
-    @Column(name = "points",columnDefinition = "int default 0")
-    private Integer points;
+//    @Column(name = "points",columnDefinition = "int default 0")
+//    private Integer points = 0;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
@@ -83,6 +86,7 @@ public class Users {
 
     @PreUpdate
     protected void onUpdate() {
+
         updateAt = Instant.now();
     }
 

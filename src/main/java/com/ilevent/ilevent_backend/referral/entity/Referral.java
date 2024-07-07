@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Referral {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "referral_")
-    @SequenceGenerator(name = "referral_id_gen", sequenceName = "referrals_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "referral_id_gen", sequenceName = "referrals_id_seq", allocationSize = 1,  initialValue = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -29,9 +29,9 @@ public class Referral {
     @JoinColumn(name = "referred_user_id")
     private Users referredUserId;
 
-    @ColumnDefault("10000")
-    @Column(name = "points")
-    private Integer points;
+//    @ColumnDefault("10000")
+//    @Column(name = "points")
+//    private Integer points;
 
     @NotNull
     @Column(name = "created_at")
@@ -43,5 +43,21 @@ public class Referral {
     @NotNull
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
+
+    @PreRemove
+    protected void onDelete() {
+        deletedAt = Instant.now();
+    }
 
 }

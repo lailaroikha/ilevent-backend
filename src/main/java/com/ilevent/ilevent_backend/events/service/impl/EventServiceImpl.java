@@ -10,9 +10,12 @@ import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -26,7 +29,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Events> getAllEvents(Pageable pageable) {
-        return null;
+        return eventRepository.findAll(pageable);
     }
 
 
@@ -79,4 +82,31 @@ public class EventServiceImpl implements EventService {
     public void deletedEvent(Long id) {
         eventRepository.deleteById(id);
     }
+
+    @Override
+    public List<Events> getEventsByCategory(Events.CategoryType category) {
+        return eventRepository.findByCategory(category);
+    }
+
+    @Override
+    public List<Events> getEventsByDate(LocalDate date) {
+        return eventRepository.findByDate(date);
+    }
+
+    @Override
+    public List<Events> getEventsByPrice(Boolean isFreeEvent) {
+        return eventRepository.findByIsFreeEvent(isFreeEvent);
+    }
+
+    @Override
+    public List<Events> getEventsByAvailableSeats(Integer availableSeats) {
+        return eventRepository.findByAvailableSeatsGreaterThanEqual(availableSeats);
+    }
+
+    @Override
+    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats) {
+        List<Events> events = eventRepository.findByCategoryAndDateAndIsFreeEventAndAvailableSeatsGreaterThanEqual(category, date, isFreeEvent, availableSeats);
+        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
+    }
+
 }

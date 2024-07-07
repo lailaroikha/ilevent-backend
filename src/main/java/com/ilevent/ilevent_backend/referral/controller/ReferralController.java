@@ -18,12 +18,6 @@ public class ReferralController {
         this.referralService = referralService;
     }
 
-    @PostMapping("/apply")
-    public ResponseEntity<ReferralResponseDto> applyReferralCode(@RequestBody ReferralRequestDto referralRequestDto) {
-        ReferralResponseDto response = referralService.applyReferralCode(referralRequestDto);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/{userId}")
     public ResponseEntity<ReferralResponseDto> getReferralDetails(@PathVariable Long userId) {
         Referral referral = referralService.getReferralDetails(userId);

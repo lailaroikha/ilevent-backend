@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Data
 public class ReferralRequestDto {
+    private Long Id;
     private Long userId;
     private String referralCode;
 }

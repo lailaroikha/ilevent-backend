@@ -3,6 +3,9 @@ package com.ilevent.ilevent_backend.events.dto;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import lombok.Data;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 public class CreateEventResponseDto {
     private Long organizerId;
@@ -17,10 +20,13 @@ public class CreateEventResponseDto {
     private Events.CategoryType category;
     private OrganizerDto organizer;
 
+    private List<TicketDto> ticket;
+
     @Data
     public static class OrganizerDto {
         private Long id;
         private String name;
+        private String username;
     }
 
     public static CreateEventResponseDto fromEntity(Events events){
@@ -38,8 +44,14 @@ public class CreateEventResponseDto {
         OrganizerDto organizerDto = new OrganizerDto();
         organizerDto.setId(events.getOrganizer().getId());
         organizerDto.setName(events.getOrganizer().getName());
+        organizerDto.setUsername(events.getOrganizer().getUsername());
         dto.setOrganizer(organizerDto);
 
+        if (events.getTicket() != null) {
+            dto.setTicket(events.getTicket().stream()
+                    .map(TicketDto::fromEntity)
+                    .collect(Collectors.toList()));
+        }
         return dto;
     }
 }

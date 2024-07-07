@@ -7,7 +7,7 @@ import java.time.Instant;
 
 @Data
 public class PointHistoryResponseDto {
-    private Integer id;
+    private Long Id;
     private Long userId;
     private Integer points;
     private String type;

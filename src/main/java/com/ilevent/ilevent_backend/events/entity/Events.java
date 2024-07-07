@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.events.entity;
 
+import com.ilevent.ilevent_backend.ticket.entity.Ticket;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -82,6 +84,9 @@ public class Events {
     protected void onDelete () {
         deletedAt = Instant.now();
     }
+
+    @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> ticket;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 20)
