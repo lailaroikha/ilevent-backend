@@ -17,17 +17,17 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "price_id_gen")
     @SequenceGenerator(name = "price_id_gen", sequenceName = "price_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "price_before_discount")
-    private Integer priceBeforeDiscount;
+    private Double priceBeforeDiscount;
 
     @Column(name = "total_discount")
-    private Integer totalDiscount;
+    private Double totalDiscount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typeticket_id")
-    private Ticket typeticket;
+    private Ticket typeticketId;
 
     @NotNull
     @Column(name = "created_at", nullable = false)

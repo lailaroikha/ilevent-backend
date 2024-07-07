@@ -34,7 +34,7 @@ public class Ticket {
     private Integer availableSeats;
 
     @Column(name = "price_before_discount")
-    private Integer priceBeforeDiscount;
+    private Double priceBeforeDiscount;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
