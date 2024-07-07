@@ -12,7 +12,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "reviews", schema = "ilevent")
-public class Review {
+public class Reviews {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reviews_id_gen")
     @SequenceGenerator(name = "reviews_id_gen", sequenceName = "reviews_id_seq", allocationSize = 1)
@@ -25,7 +25,7 @@ public class Review {
 
     @NotNull
     @Column(name = "rating", nullable = false)
-    private Integer rating;
+    private Double rating;
 
     @Column(name = "review", length = Integer.MAX_VALUE)
     private String review;

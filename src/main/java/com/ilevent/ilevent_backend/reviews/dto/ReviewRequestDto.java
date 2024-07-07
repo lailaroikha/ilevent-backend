@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ReviewRequestDto {
     private Long eventId;
-    private Integer rating;
+    private Double rating;
     private String review;
 }
