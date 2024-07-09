@@ -1,10 +1,8 @@
 package com.ilevent.ilevent_backend.referral.controller;
 
 import com.ilevent.ilevent_backend.referral.dto.ReferralResponseDto;
-import com.ilevent.ilevent_backend.referral.dto.ReferralRequestDto;
 import com.ilevent.ilevent_backend.referral.entity.Referral;
 import com.ilevent.ilevent_backend.referral.service.ReferralService;
-import com.ilevent.ilevent_backend.users.service.UserService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

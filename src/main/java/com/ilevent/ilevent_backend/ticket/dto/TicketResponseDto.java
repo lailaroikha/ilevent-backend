@@ -9,7 +9,8 @@ public class TicketResponseDto {
     private Long eventId;
     private String nameTicket;
     private Integer availableSeats;
-    private Integer priceBeforeDiscount;
+    private Double priceBeforeDiscount;
+    private Double priceAfterDiscount;
     private String createdAt;
     private String updatedAt;
 
@@ -20,6 +21,7 @@ public class TicketResponseDto {
         dto.setNameTicket(ticket.getNameTicket());
         dto.setAvailableSeats(ticket.getAvailableSeats());
         dto.setPriceBeforeDiscount(ticket.getPriceBeforeDiscount());
+        dto.setPriceAfterDiscount(ticket.getPriceAfterDiscount());
         dto.setCreatedAt(ticket.getCreatedAt().toString());
         dto.setUpdatedAt(ticket.getUpdatedAt().toString());
         return dto;

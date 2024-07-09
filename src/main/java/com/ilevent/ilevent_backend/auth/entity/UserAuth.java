@@ -3,11 +3,12 @@ package com.ilevent.ilevent_backend.auth.entity;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
 
 @Getter
 public class UserAuth extends Users implements UserDetails {
@@ -25,7 +26,14 @@ public class UserAuth extends Users implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(()-> "Role_USER");
+        // Add role based on is_organizer field
+        if (users.getIsOrganizer()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER"));
+        } else {
+            authorities.add(new SimpleGrantedAuthority("ROLE_PERSONAL"));
+        }
+
+
         return authorities;
     }
 

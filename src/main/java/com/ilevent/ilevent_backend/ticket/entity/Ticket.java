@@ -36,6 +36,12 @@ public class Ticket {
     @Column(name = "price_before_discount")
     private Double priceBeforeDiscount;
 
+    @Column(name = "total_discount")
+    private Double totalDiscount;
+
+    @Column(name = "price_after_discount")
+    private Double priceAfterDiscount;
+
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
@@ -46,6 +52,5 @@ public class Ticket {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
-
 
 }

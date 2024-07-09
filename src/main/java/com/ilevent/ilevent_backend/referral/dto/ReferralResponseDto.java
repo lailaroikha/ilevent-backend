@@ -1,7 +1,6 @@
 package com.ilevent.ilevent_backend.referral.dto;
 
 import com.ilevent.ilevent_backend.referral.entity.Referral;
-import com.ilevent.ilevent_backend.users.entity.Users;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

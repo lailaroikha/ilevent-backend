@@ -9,26 +9,20 @@ import com.ilevent.ilevent_backend.referral.repository.ReferralRepository;
 import com.ilevent.ilevent_backend.referral.service.ReferralService;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
-import com.ilevent.ilevent_backend.voucher.entity.Voucher;
-import com.ilevent.ilevent_backend.voucher.repository.VoucherRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ReferralServiceImpl implements ReferralService {
     private final ReferralRepository referralRepository;
     private final UserRepository userRepository;
-    private final VoucherRepository voucherRepository;
     private final PointHistoryRepository pointHistoryRepository;
 
-    public ReferralServiceImpl(ReferralRepository referralRepository, UserRepository userRepository, VoucherRepository voucherRepository, PointHistoryRepository pointHistoryRepository) {
+    public ReferralServiceImpl(ReferralRepository referralRepository, UserRepository userRepository, PointHistoryRepository pointHistoryRepository) {
         this.referralRepository = referralRepository;
         this.userRepository = userRepository;
-        this.voucherRepository = voucherRepository;
         this.pointHistoryRepository = pointHistoryRepository;
     }
 
@@ -65,17 +59,6 @@ public class ReferralServiceImpl implements ReferralService {
         pointsHistory.setCreatedAt(Instant.now());
         pointsHistory.setUpdateAt(Instant.now());
         pointHistoryRepository.save(pointsHistory);
-
-        // Save to Voucher
-        Voucher voucher = new Voucher();
-        voucher.setUserId(newUser);
-        voucher.setDiscountCode(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
-        voucher.setDiscountPercentage(10);
-        voucher.setMaxUses(1);
-        voucher.setExpiredAt(LocalDate.now().plusDays(90));
-        voucher.setCreatedAt(Instant.now());
-        voucher.setUpdatedAt(Instant.now());
-        voucherRepository.save(voucher);
 
         // Prepare the response using fromEntity method
         return ReferralResponseDto.fromEntity(referral);

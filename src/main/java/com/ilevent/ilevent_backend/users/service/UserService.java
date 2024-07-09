@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserService {
     RegisterResponseDto register(RegisterRequestDto req);
     RegisterResponseDto findByEmail(String email);
+    Users getUserById(Long id);
     Users findById(Long id);
     List<Users> findAll();
     void deleteById(Long id);

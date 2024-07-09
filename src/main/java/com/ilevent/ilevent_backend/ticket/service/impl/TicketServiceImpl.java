@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
-public class TickerServiceImpl implements TicketService {
+public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
 
-    public TickerServiceImpl(TicketRepository ticketRepository, EventRepository eventRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, EventRepository eventRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
     }
@@ -31,10 +31,19 @@ public class TickerServiceImpl implements TicketService {
         ticket.setNameTicket(dto.getNameTicket());
         ticket.setAvailableSeats(dto.getAvailableSeats());
         ticket.setPriceBeforeDiscount(dto.getPriceBeforeDiscount());
+        ticket.setPriceAfterDiscount(ticket.getPriceAfterDiscount());
+        ticket.setTotalDiscount(dto.getTicketDiscount());
         ticket.setCreatedAt(Instant.now());
         ticket.setUpdatedAt(Instant.now());
 
         Ticket savedTicket = ticketRepository.save(ticket);
         return TicketResponseDto.fromEntity(savedTicket);
+    }
+
+    private Double calculatePriceAfterDiscount(Double priceBeforeDiscount, Double totalDiscount) {
+        if (priceBeforeDiscount == null || totalDiscount == null) {
+            return null;
+        }
+        return priceBeforeDiscount * ((100 - totalDiscount) / 100.0);
     }
 }

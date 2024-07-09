@@ -67,6 +67,9 @@ public class Events {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @Column(name = "ratting_rate")
+    private Integer rattingRate;
+
     //    update data before create data
     @PrePersist
     protected void onCreate() {

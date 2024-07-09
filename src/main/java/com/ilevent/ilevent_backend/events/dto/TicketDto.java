@@ -8,7 +8,7 @@ public class TicketDto {
     private Long id;
     private String nameTicket;
     private Integer availableSeats;
-    private Integer priceBeforeDiscount;
+    private Double priceBeforeDiscount;
 
     public static TicketDto fromEntity(Ticket ticket) {
         TicketDto dto = new TicketDto();

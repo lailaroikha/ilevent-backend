@@ -6,6 +6,7 @@ import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.responses.Response;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class EventsController {
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
+    @RolesAllowed("ROLE_ORGANIZER")
     @PostMapping("/create")
     public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
         eventService.createEvent(createEventRequestDto);

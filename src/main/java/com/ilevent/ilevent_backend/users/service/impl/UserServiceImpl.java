@@ -123,11 +123,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Users getUserById(Long Id) {
+        return userRepository.findById(Id)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + Id));
+    }
+
+    @Override
     public Users findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new ApplicationException("User not found"));
     }
     @Override
     public List<Users> findAll() {
+
         return null;
     }
 
@@ -137,6 +144,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users profile() {
+
         return null;
     }
 

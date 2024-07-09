@@ -26,5 +26,10 @@ public interface EventRepository extends JpaRepository<Events, Long> {
             @Param("date") LocalDate date,
             @Param("isFreeEvent") Boolean isFreeEvent,
             @Param("availableSeats") Integer availableSeats
+            //location
+            //out of stock
+            //popular
+            //murahke mahal
+            //mahal ke murah
     );
 }

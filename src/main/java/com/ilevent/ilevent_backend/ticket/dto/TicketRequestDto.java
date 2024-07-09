@@ -7,5 +7,6 @@ public class TicketRequestDto {
     private Long eventId;
     private String nameTicket;
     private Integer availableSeats;
-    private Integer priceBeforeDiscount;
+    private Double priceBeforeDiscount;
+    private Double ticketDiscount;
 }

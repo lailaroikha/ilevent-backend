@@ -95,4 +95,7 @@ public class Users {
     protected void onDelete () {
         deletedAt = Instant.now();
     }
+//    public Boolean getIsOrganizer() {
+//        return isOrganizer;
+//    }
 }
