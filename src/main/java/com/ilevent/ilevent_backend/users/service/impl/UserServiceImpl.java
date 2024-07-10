@@ -11,6 +11,7 @@ import com.ilevent.ilevent_backend.users.service.UserService;
 import com.ilevent.ilevent_backend.utils.ReferralCodeGenerator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
         this.referralRepository = referralRepository;
     }
 
+    @Transactional
     @Override
     public RegisterResponseDto register(RegisterRequestDto user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()){
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService {
     private RegisterResponseDto toResponseDto(Users users) {
         RegisterResponseDto dto = new RegisterResponseDto();
         dto.setName(users.getName());
-        dto.setIsOrganizer(users.getIsOrganizer());
+        dto.setOrganizer(users.getOrganizer());
         dto.setReferralCode(users.getReferralCode());
         return dto;
     }

@@ -19,8 +19,8 @@ public class RegisterRequestDto implements Serializable {
     @NotBlank (message = "Password is required")
     private String password;
     @NotNull (message ="Role is mandatory")
-    private Boolean isOrganizer;
-
+    private Boolean organizer;
+    @NotBlank
     private String referralCode;
     @NotBlank (message = "Username is required")
     private String username;
@@ -28,12 +28,12 @@ public class RegisterRequestDto implements Serializable {
 
     public Users toEntity() {
         Users users =new Users();
-        users.setName(name);
-        users.setUsername(username);
-        users.setEmail(email);
-        users.setPassword(password);
-        users.setReferralCode(referralCode);
-        users.setIsOrganizer(isOrganizer);
+        users.setName(this.name);
+        users.setUsername(this.username);
+        users.setEmail(this.email);
+        users.setPassword(this.password);
+        users.setReferralCode(this.referralCode);
+        users.setOrganizer(this.organizer);
         return users;
     }
 

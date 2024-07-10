@@ -22,5 +22,8 @@ public class ReferralResponseDto {
         dto.setUserId(referral.getUser().getId());
         dto.setReferralCode(String.valueOf(referral.getReferredUserId().getId())); // The referral code being applied
         return dto;
+
     }
+
+
 }

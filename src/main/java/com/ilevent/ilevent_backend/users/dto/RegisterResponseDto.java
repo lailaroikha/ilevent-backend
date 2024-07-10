@@ -7,7 +7,7 @@ import lombok.Data;
 public class RegisterResponseDto {
     private String name;
     private String email;
-    private Boolean isOrganizer;
+    private Boolean organizer;
     private String referralCode;
     private String username;
 
@@ -15,7 +15,7 @@ public class RegisterResponseDto {
         RegisterResponseDto dto = new RegisterResponseDto();
         dto.setName(savedUser.getName());
         dto.setEmail(savedUser.getEmail());
-        dto.setIsOrganizer(savedUser.getIsOrganizer());
+        dto.setOrganizer(savedUser.getOrganizer());
         dto.setReferralCode(savedUser.getReferralCode());
         dto.setUsername(savedUser.getUsername());
         return dto;

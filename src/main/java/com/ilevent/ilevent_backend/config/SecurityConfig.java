@@ -32,7 +32,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @Log
 public class SecurityConfig {
     private final RsaKeyConfigProperties rsaKeyConfigProperties;
@@ -53,6 +53,7 @@ public class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
@@ -65,9 +66,10 @@ public class SecurityConfig {
                     auth.requestMatchers("/error/**").permitAll();
                     auth.requestMatchers("/api/v1/auth/login").permitAll();
                     auth.requestMatchers("/api/v1/users/register").permitAll();
-                    auth.requestMatchers("/api/events/create").hasAnyRole("ORGANIZER");
+//                    auth.requestMatchers("/api/events/create").hasRole("ORGANIZER");
                     auth.requestMatchers("/api/v1/referral/").hasAnyRole("PERSONAL");
                     auth.anyRequest().authenticated();
+
                 })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((oauth2) -> {

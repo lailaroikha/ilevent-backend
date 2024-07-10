@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
 
+import static org.hibernate.query.sqm.tree.SqmNode.log;
+
 @Service
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
@@ -32,9 +34,16 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll(pageable);
     }
 
-
     @Override
-    public CreateEventResponseDto createEvent(CreateEventRequestDto dto) {
+    public CreateEventResponseDto createEvent(CreateEventRequestDto dto, String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        log.info("User found: " + user.getEmail() + ", Is Organizer: " + user.getOrganizer());
+        if (!Boolean.TRUE.equals(user.getOrganizer())) {
+            log.error("User with email " + email + " is not an organizer");
+            throw new RuntimeException("User is not an organizer");
+
+        }
         Events events = new Events();
         events.setName(dto.getName());
         events.setDescription(dto.getDescription());
@@ -44,11 +53,8 @@ public class EventServiceImpl implements EventService {
         // Set parsed date and time to entity
         events.setDate(parsedDate);
         events.setTime(parsedTime);
-        //set organizer from users
-        Users organizer = userRepository.findByIdAndIsOrganizerTrue(dto.getOrganizerId())
-                .orElseThrow(() -> new RuntimeException("Organizer not found or not an organizer"));
         // Set organizer ke event
-        events.setOrganizer(organizer);
+        events.setOrganizer(user);
         events.setLocation(dto.getLocation());
         events.setIsFreeEvent(dto.getIsFreeEvent());
         events.setImage(dto.getImage());
@@ -56,6 +62,13 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(events);
         return CreateEventResponseDto.fromEntity(events);
     }
+
+
+//    @Override
+//    public List<CreateEventRequestDto> findByUser_Email(String email) {
+//
+//        return List.of();
+//    }
 
     @Override
     public Events updateEvent(Events event) {
@@ -107,6 +120,11 @@ public class EventServiceImpl implements EventService {
     public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats) {
         List<Events> events = eventRepository.findByCategoryAndDateAndIsFreeEventAndAvailableSeatsGreaterThanEqual(category, date, isFreeEvent, availableSeats);
         return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteEvent(Long id) {
+        eventRepository.deleteById(id);
     }
 
 }

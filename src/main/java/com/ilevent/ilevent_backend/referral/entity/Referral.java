@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "referral", schema = "ilevent")
 public class Referral {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "referral_")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "referral_id_gen", sequenceName = "referrals_id_seq", allocationSize = 1,  initialValue = 1)
     @Column(name = "id", nullable = false)
     private Long id;

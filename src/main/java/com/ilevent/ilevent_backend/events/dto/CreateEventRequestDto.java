@@ -4,7 +4,6 @@ import com.ilevent.ilevent_backend.events.entity.Events;
 import lombok.Data;
 @Data
 public class CreateEventRequestDto {
-    private Long organizerId;
     private String name;
     private String description;
     private String location;

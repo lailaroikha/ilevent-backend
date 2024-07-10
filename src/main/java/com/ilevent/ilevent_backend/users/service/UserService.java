@@ -17,4 +17,5 @@ public interface UserService {
     void deleteById(Long id);
     Users profile();
 
+//    void setupUserProfile(String email, SetupProfileDTO setupProfileDto);
 }

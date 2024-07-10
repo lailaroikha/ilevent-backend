@@ -31,7 +31,17 @@ public class CreateEventResponseDto {
 
     public static CreateEventResponseDto fromEntity(Events events){
         CreateEventResponseDto dto = new CreateEventResponseDto();
-        dto.setOrganizerId(events.getOrganizer().getId());
+
+        if (events.getOrganizer() != null) {
+            dto.setOrganizerId(events.getOrganizer().getId());
+            OrganizerDto organizerDto = new OrganizerDto();
+            organizerDto.setId(events.getOrganizer().getId());
+            organizerDto.setName(events.getOrganizer().getName());
+            organizerDto.setUsername(events.getOrganizer().getUsername());
+            dto.setOrganizer(organizerDto);
+        }
+
+//        dto.setOrganizerId(events.getOrganizer().getId());
         dto.setName(events.getName());
         dto.setDescription(events.getDescription());
         dto.setLocation(events.getLocation());

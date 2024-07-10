@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.users.entity;
 
+import com.ilevent.ilevent_backend.events.entity.Events;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Getter
@@ -40,8 +44,8 @@ public class Users {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @Column(name= "is_organizer", nullable = false)
-    private Boolean isOrganizer;
+    @Column(name= "is_organizer")
+    private Boolean organizer;
 
     @Size(max = 100)
     @NotNull
@@ -90,10 +94,18 @@ public class Users {
         updateAt = Instant.now();
     }
 
-//    sebelum di remove
+    //    sebelum di remove
     @PreRemove
     protected void onDelete () {
         deletedAt = Instant.now();
+    }
+
+
+
+    //    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private List<Events> events = new ArrayList<>();
+    public boolean isOrganizer() {
+        return false;
     }
 //    public Boolean getIsOrganizer() {
 //        return isOrganizer;

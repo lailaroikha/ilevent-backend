@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.responses;
 
+import com.ilevent.ilevent_backend.users.dto.RegisterResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,4 +59,13 @@ public class Response<T> {
         response.setData(data);
         return ResponseEntity.status(statusCode).body(response);
     }
+
+//    public static <T>  ResponseEntity<Response<T>>successfulResponse(int statusCode, String message, T data)
+////            String userProfileSetupSuccessfully, RegisterResponseDto byEmail)
+//    {
+//        Response<T> response = new Response<>(statusCode, message);
+//        response.setSuccess(true);
+//        response.setData(data);
+//        return ResponseEntity.status(statusCode).body(response);
+//    }
 }

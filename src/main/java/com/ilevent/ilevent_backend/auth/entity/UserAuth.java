@@ -27,13 +27,11 @@ public class UserAuth extends Users implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
         // Add role based on is_organizer field
-        if (users.getIsOrganizer()) {
+        if (users.isOrganizer()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER"));
         } else {
             authorities.add(new SimpleGrantedAuthority("ROLE_PERSONAL"));
         }
-
-
         return authorities;
     }
 

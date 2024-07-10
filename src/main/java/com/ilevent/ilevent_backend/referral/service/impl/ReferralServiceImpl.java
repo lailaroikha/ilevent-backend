@@ -29,12 +29,6 @@ public class ReferralServiceImpl implements ReferralService {
 
     @Override
     public ReferralResponseDto applyReferralCode(ReferralRequestDto dto) {
-        // Validate the referral code
-        Optional<Users> referringUserOpt = userRepository.findByReferralCode(dto.getReferralCode());
-        if (referringUserOpt.isEmpty()) {
-            throw new IllegalArgumentException("Invalid referral code");
-        }
-        Users referringUser = referringUserOpt.get();
 
         // Retrieve the new user
         Optional<Users> newUserOpt = userRepository.findById(dto.getUserId());
@@ -43,25 +37,35 @@ public class ReferralServiceImpl implements ReferralService {
         }
         Users newUser = newUserOpt.get();
 
-        // Save the referral details
-        Referral referral = new Referral();
-        referral.setUser(referringUser);
-        referral.setReferredUserId(newUser);
-        referral.setCreatedAt(Instant.now());
-        referral.setUpdatedAt(Instant.now());
-        referralRepository.save(referral);
+        //Check if referral code is provide
+        if (dto.getReferralCode() != null && !dto.getReferralCode().isEmpty()) {// Validate the referral code
+            Optional<Users> referringUserOpt = userRepository.findByReferralCode(dto.getReferralCode());
+            if (referringUserOpt.isEmpty()) {
+                throw new IllegalArgumentException("Invalid referral code");
+            }
+            Users referringUser = referringUserOpt.get();
 
-        // Add points to referrer
-        PointsHistory pointsHistory = new PointsHistory();
-        pointsHistory.setUser(referringUser);
-        pointsHistory.setPoints(10000);
-        pointsHistory.setType("REFERRAL");
-        pointsHistory.setCreatedAt(Instant.now());
-        pointsHistory.setUpdateAt(Instant.now());
-        pointHistoryRepository.save(pointsHistory);
+            // Save the referral details
+            Referral referral = new Referral();
+            referral.setUser(referringUser);
+            referral.setReferredUserId(newUser);
+            referral.setCreatedAt(Instant.now());
+            referral.setUpdatedAt(Instant.now());
+            referralRepository.save(referral);
 
-        // Prepare the response using fromEntity method
-        return ReferralResponseDto.fromEntity(referral);
+            // Add points to referrer
+            PointsHistory pointsHistory = new PointsHistory();
+            pointsHistory.setUser(referringUser);
+            pointsHistory.setPoints(10000);
+            pointsHistory.setType("REFERRAL");
+            pointsHistory.setCreatedAt(Instant.now());
+            pointsHistory.setUpdateAt(Instant.now());
+            pointHistoryRepository.save(pointsHistory);
+            // Prepare the response using fromEntity method
+            return ReferralResponseDto.fromEntity(referral);
+        } else {
+            return  null;
+        }
     }
 
     @Override

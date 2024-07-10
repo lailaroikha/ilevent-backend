@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface EventService {
-    CreateEventResponseDto createEvent(CreateEventRequestDto dto);
+    CreateEventResponseDto createEvent(CreateEventRequestDto dto, String email);
+//    List<CreateEventRequestDto> findByUser_Email(String email);
+
     Events updateEvent(Events event);
     CreateEventResponseDto getEventById(Long id);
     void deletedEvent(Long id);
@@ -27,4 +29,5 @@ public interface EventService {
     // Combine filters
     List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats);
 
+    void deleteEvent(Long id);
 }

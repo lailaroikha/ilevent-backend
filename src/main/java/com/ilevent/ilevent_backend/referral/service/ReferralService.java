@@ -9,4 +9,5 @@ public interface ReferralService {
     ReferralResponseDto applyReferralCode(ReferralRequestDto dto);
     Referral getReferralDetails(Long userId);
 
+
 }
