@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class TicketResponseDto {
     private Long Id;
-    private Long eventId;
+//    private Long eventId;
     private String nameTicket;
     private Integer availableSeats;
     private Double priceBeforeDiscount;
@@ -17,7 +17,7 @@ public class TicketResponseDto {
     public static TicketResponseDto fromEntity(Ticket ticket) {
         TicketResponseDto dto = new TicketResponseDto();
         dto.setId(ticket.getId());
-        dto.setEventId(ticket.getEventId().getId());
+//        dto.setEventId(ticket.getEventId().getId());
         dto.setNameTicket(ticket.getNameTicket());
         dto.setAvailableSeats(ticket.getAvailableSeats());
         dto.setPriceBeforeDiscount(ticket.getPriceBeforeDiscount());

@@ -7,10 +7,9 @@ import java.time.LocalDate;
 
 @Data
 public class VoucherRequestDto {
-    private Long userId;
-    private Long eventId;
+
     private String discountCode;
-    private Integer discountPercentage;
+    private Double discountPercentage;
     private Integer maxUses;
     private LocalDate expiredAt;
 

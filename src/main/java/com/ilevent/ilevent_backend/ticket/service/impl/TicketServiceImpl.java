@@ -2,7 +2,6 @@ package com.ilevent.ilevent_backend.ticket.service.impl;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
-import com.ilevent.ilevent_backend.ticket.dto.TicketRequestDto;
 import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
 import com.ilevent.ilevent_backend.ticket.repository.TicketRepository;
@@ -22,17 +21,16 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketResponseDto createTicket(TicketRequestDto dto) {
-        Events event = eventRepository.findById(dto.getEventId())
+    public TicketResponseDto createTicket(Ticket dto) {
+        Events event = eventRepository.findById(dto.getEventId().getId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
-
         Ticket ticket = new Ticket();
         ticket.setEventId(event);
         ticket.setNameTicket(dto.getNameTicket());
         ticket.setAvailableSeats(dto.getAvailableSeats());
         ticket.setPriceBeforeDiscount(dto.getPriceBeforeDiscount());
         ticket.setPriceAfterDiscount(ticket.getPriceAfterDiscount());
-        ticket.setTotalDiscount(dto.getTicketDiscount());
+        ticket.setTotalDiscount(dto.getTotalDiscount());
         ticket.setCreatedAt(Instant.now());
         ticket.setUpdatedAt(Instant.now());
 
@@ -40,7 +38,7 @@ public class TicketServiceImpl implements TicketService {
         return TicketResponseDto.fromEntity(savedTicket);
     }
 
-    private Double calculatePriceAfterDiscount(Double priceBeforeDiscount, Double totalDiscount) {
+    public Double calculatePriceAfterDiscount(Double priceBeforeDiscount, Double totalDiscount) {
         if (priceBeforeDiscount == null || totalDiscount == null) {
             return null;
         }

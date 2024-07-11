@@ -33,7 +33,7 @@ public class Voucher {
 
     @NotNull
     @Column(name = "discount_percentage", nullable = false)
-    private Integer discountPercentage;
+    private Double discountPercentage;
 
     @NotNull
     @Column(name = "max_uses", nullable = false)

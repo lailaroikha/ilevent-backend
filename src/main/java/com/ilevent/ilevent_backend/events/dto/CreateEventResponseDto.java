@@ -1,6 +1,8 @@
 package com.ilevent.ilevent_backend.events.dto;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
+import com.ilevent.ilevent_backend.voucher.dto.VoucherResponseDto;
 import lombok.Data;
 
 import java.util.List;
@@ -20,7 +22,11 @@ public class CreateEventResponseDto {
     private Events.CategoryType category;
     private OrganizerDto organizer;
 
-    private List<TicketDto> ticket;
+    //Ticket and Voucher
+    private List<TicketResponseDto> tickets;
+    private List<VoucherResponseDto> vouchers;
+
+//    private List<TicketDto> ticket;
 
     @Data
     public static class OrganizerDto {
@@ -40,7 +46,6 @@ public class CreateEventResponseDto {
             organizerDto.setUsername(events.getOrganizer().getUsername());
             dto.setOrganizer(organizerDto);
         }
-
 //        dto.setOrganizerId(events.getOrganizer().getId());
         dto.setName(events.getName());
         dto.setDescription(events.getDescription());
@@ -57,11 +62,24 @@ public class CreateEventResponseDto {
         organizerDto.setUsername(events.getOrganizer().getUsername());
         dto.setOrganizer(organizerDto);
 
-        if (events.getTicket() != null) {
-            dto.setTicket(events.getTicket().stream()
-                    .map(TicketDto::fromEntity)
+        // Tickets
+        if (events.getTickets() != null) {
+            dto.setTickets(events.getTickets().stream()
+                    .map(TicketResponseDto::fromEntity)
                     .collect(Collectors.toList()));
         }
+
+        // Vouchers
+        if (events.getVouchers() != null) {
+            dto.setVouchers(events.getVouchers().stream()
+                    .map(VoucherResponseDto::fromEntity)
+                    .collect(Collectors.toList()));
+        }
+//        if (events.getTicket() != null) {
+//            dto.setTicket(events.getTicket().stream()
+//                    .map(TicketDto::fromEntity)
+//                    .collect(Collectors.toList()));
+//        }
         return dto;
     }
 }

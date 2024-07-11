@@ -1,8 +1,6 @@
 package com.ilevent.ilevent_backend.voucher.service.impl;
 
-import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
-import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import com.ilevent.ilevent_backend.voucher.dto.VoucherRequestDto;
 import com.ilevent.ilevent_backend.voucher.dto.VoucherResponseDto;
@@ -11,7 +9,8 @@ import com.ilevent.ilevent_backend.voucher.repository.VoucherRepository;
 import com.ilevent.ilevent_backend.voucher.service.VoucherService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.Instant;
+
 @Service
 public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepository voucherRepository;
@@ -28,26 +27,22 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public VoucherResponseDto createVoucher(VoucherRequestDto dto) {
         Voucher voucher = new Voucher();
-        voucher.setUserId(userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("User not found")));
-
-        if (dto.getEventId() != null) {
-            voucher.setEventId(eventRepository.findById(dto.getEventId()).orElseThrow(() -> new IllegalArgumentException("Event not found")));
-        }
-
         voucher.setDiscountCode(dto.getDiscountCode());
         voucher.setDiscountPercentage(dto.getDiscountPercentage());
         voucher.setMaxUses(dto.getMaxUses());
 
         // Set the expiration date based on whether it is a referral code voucher or an organizer-created voucher
-        if (dto.getDiscountCode().startsWith("REF")) {
-            voucher.setReferralCodeVoucher(); // This method sets expiration to 3 months from creation
-        } else {
-            voucher.setExpiredAt(dto.getExpiredAt()); // Use the provided expiration date for organizer-created vouchers
-        }
+//        if (dto.getDiscountCode().startsWith("REF")) {
+//            voucher.setReferralCodeVoucher(); // This method sets expiration to 3 months from creation
+//        } else {
+        voucher.setCreatedAt(Instant.now());
+        voucher.setUpdatedAt(Instant.now());
+        voucher.setExpiredAt(dto.getExpiredAt()); // Use the provided expiration date for organizer-created vouchers
 
-        voucherRepository.save(voucher);
 
-        return VoucherResponseDto.fromEntity(voucher);
+//        voucherRepository.save(voucher);
+        Voucher savedVoucher = voucherRepository.save(voucher);
+        return VoucherResponseDto.fromEntity(savedVoucher);
     }
 
 }

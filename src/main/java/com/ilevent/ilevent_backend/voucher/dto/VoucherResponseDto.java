@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Data
 public class VoucherResponseDto {
     private Long id;
-    private Long userId;
-    private Long eventId;
+//    private Long userId;
+//    private Long eventId;
     private String discountCode;
-    private Integer discountPercentage;
+    private Double discountPercentage;
     private Integer maxUses;
     private Integer used;
     private LocalDate expiredAt;
@@ -22,8 +22,8 @@ public class VoucherResponseDto {
     public static VoucherResponseDto fromEntity(Voucher voucher) {
         VoucherResponseDto dto = new VoucherResponseDto();
         dto.setId(voucher.getId());
-        dto.setUserId(voucher.getUserId().getId());
-        dto.setEventId(voucher.getEventId().getId());
+//        dto.setUserId(voucher.getUserId().getId());
+//        dto.setEventId(voucher.getEventId().getId());
         dto.setDiscountCode(voucher.getDiscountCode());
         dto.setDiscountPercentage(voucher.getDiscountPercentage());
         dto.setMaxUses(voucher.getMaxUses());

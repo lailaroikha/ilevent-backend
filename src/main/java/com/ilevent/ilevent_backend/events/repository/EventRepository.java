@@ -19,10 +19,10 @@ public interface EventRepository extends JpaRepository<Events, Long> {
 
     List<Events> findByIsFreeEvent(Boolean isFreeEvent);
 
-    @Query("SELECT e FROM Events e JOIN e.ticket t GROUP BY e HAVING SUM(t.availableSeats) >= :availableSeats")
+    @Query("SELECT e FROM Events e JOIN e.tickets t GROUP BY e HAVING SUM(t.availableSeats) >= :availableSeats")
     List<Events> findByAvailableSeatsGreaterThanEqual(@Param("availableSeats") Integer availableSeats);
 
-    @Query("SELECT e FROM Events e JOIN e.ticket t WHERE e.category = :category AND e.date = :date AND e.isFreeEvent = :isFreeEvent GROUP BY e HAVING SUM(t.availableSeats) >= :availableSeats")
+    @Query("SELECT e FROM Events e JOIN e.tickets t WHERE e.category = :category AND e.date = :date AND e.isFreeEvent = :isFreeEvent GROUP BY e HAVING SUM(t.availableSeats) >= :availableSeats")
     List<Events> findByCategoryAndDateAndIsFreeEventAndAvailableSeatsGreaterThanEqual(
             @Param("category") Events.CategoryType category,
             @Param("date") LocalDate date,

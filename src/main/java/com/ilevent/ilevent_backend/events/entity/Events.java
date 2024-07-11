@@ -2,6 +2,7 @@ package com.ilevent.ilevent_backend.events.entity;
 
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
 import com.ilevent.ilevent_backend.users.entity.Users;
+import com.ilevent.ilevent_backend.voucher.entity.Voucher;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -88,12 +89,18 @@ public class Events {
         deletedAt = Instant.now();
     }
 
-    @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> ticket;
+//    @OneToMany(mappedBy = "eventId")
+//    private List<Ticket> tickets;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 20)
     private CategoryType category;
+
+    @OneToMany(mappedBy = "eventId")
+    private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "eventId")
+    private List<Voucher> vouchers;
 
     public enum CategoryType {
         music,
