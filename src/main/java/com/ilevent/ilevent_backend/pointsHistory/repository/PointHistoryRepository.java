@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PointHistoryRepository extends JpaRepository<PointsHistory, Long> {
-    List<PointsHistory> findByUserId(Long userId);
+//    List<PointsHistory> findByUserId(Long userId);
 }
 

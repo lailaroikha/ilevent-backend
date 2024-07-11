@@ -1,6 +1,6 @@
 package com.ilevent.ilevent_backend.users.entity;
 
-import com.ilevent.ilevent_backend.events.entity.Events;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,9 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
 
 @Data
 @Getter
@@ -54,7 +52,7 @@ public class Users {
     private String password;
 
     @Column(name = "total_points", nullable = false, columnDefinition = "INTEGER DEFAULT 0")
-    private Integer totalPoints;
+    private Integer totalPoints = 0;
 
     @Size(max = 15)
     @Column(name = "phone", length = 15)
@@ -65,9 +63,6 @@ public class Users {
 
     @Column(name = "referral_code")
     private String referralCode;
-
-//    @Column(name = "points",columnDefinition = "int default 0")
-//    private Integer points = 0;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
@@ -80,7 +75,6 @@ public class Users {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-
     //    update data before create data
     @PrePersist
     protected void onCreate() {
@@ -90,7 +84,6 @@ public class Users {
 
     @PreUpdate
     protected void onUpdate() {
-
         updateAt = Instant.now();
     }
 
@@ -100,14 +93,7 @@ public class Users {
         deletedAt = Instant.now();
     }
 
-
-
-    //    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Events> events = new ArrayList<>();
     public boolean isOrganizer() {
         return false;
     }
-//    public Boolean getIsOrganizer() {
-//        return isOrganizer;
-//    }
 }

@@ -14,8 +14,8 @@ public class CloudinaryService {
 
     private final Cloudinary cloudinary;
 
-    public CloudinaryService() {
-        this.cloudinary = CloudinaryConfig.getCloudinary();
+    public CloudinaryService(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
     }
 
     public String uploudFile(MultipartFile file) throws IOException {

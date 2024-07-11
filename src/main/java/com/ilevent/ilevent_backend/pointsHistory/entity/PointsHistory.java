@@ -15,8 +15,7 @@ import java.time.Instant;
 @Table(name = "points_history", schema = "ilevent")
 public class PointsHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "points_history_id_gen")
-    @SequenceGenerator(name = "points_history_id_gen", sequenceName = "points_history_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -28,20 +27,35 @@ public class PointsHistory {
     @Column(name = "points", nullable = false)
     private Integer points;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "type", nullable = false, length = 20)
-    private String type;
-
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     @Column(name = "deleted_at")
-    private Integer deletedAt;
+    private Instant deletedAt;
 
     @NotNull
     @Column(name = "update_at", nullable = false)
     private Instant updateAt;
 
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "type", nullable = false, length = 20)
+    private String type;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updateAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updateAt = Instant.now();
+    }
+
+    @PreRemove
+    protected void onDelete() {
+        deletedAt = Instant.now();
+    }
 }

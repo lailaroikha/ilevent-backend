@@ -1,13 +1,10 @@
 package com.ilevent.ilevent_backend.pointsHistory.Service;
 
-//import com.ilevent.ilevent_backend.pointsHistory.dto.PointHistoryRequestDto;
-import com.ilevent.ilevent_backend.pointsHistory.dto.PointHistoryRequestDto;
-import com.ilevent.ilevent_backend.pointsHistory.dto.PointHistoryResponseDto;
-
-import java.util.List;
+import com.ilevent.ilevent_backend.pointsHistory.entity.PointsHistory;
 
 public interface PointHistoryService {
-    PointHistoryResponseDto addPointsHistory(PointHistoryRequestDto dto);
+//    PointHistoryResponseDto addPointsHistory(PointHistoryRequestDto dto);
+    PointsHistory addPointsHistory(Long userId, Integer points, String type);
     Integer getTotalPoints(Long userId);
 
 }
