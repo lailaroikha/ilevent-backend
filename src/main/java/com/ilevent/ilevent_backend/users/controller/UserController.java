@@ -1,6 +1,6 @@
 package com.ilevent.ilevent_backend.users.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilevent.ilevent_backend.responses.Response;
 import com.ilevent.ilevent_backend.users.dto.ReferralResponseDto;
@@ -45,7 +45,7 @@ public class UserController {
         try {
             var claims = Claims.getClaimsFromJwt();
             var email = (String) claims.get("sub");
-            log.info("Claims are: " + claims.toString());
+            log.info("Claims are: " + claims);
             log.info("User profile requested for user: " + email);
 
             // Convert JSON string to UpdateProfileDto
@@ -62,18 +62,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating profile");
         }
     }
-
-
-//    @RolesAllowed({"ROLE_PERSONAL", "ROLE_ORGANIZER"})
-//    @PutMapping("/profile")
-//    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileDto updateProfileDto) {
-//        var claims = Claims.getClaimsFromJwt();
-//        var email = (String) claims.get("sub");
-//        log.info("Claims are: " + claims);
-//        log.info("User profile requested for user: " + email);
-////        return Response.success("User profile updated succesfully", updateUser);
-//        return Response.success("User profile", userService);
-//    }
 
     @GetMapping("/referralcode/{id}")
     public ResponseEntity<ReferralResponseDto> getUserById(@PathVariable Long id) {

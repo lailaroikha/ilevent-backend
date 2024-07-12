@@ -58,4 +58,16 @@ public class PromoReferral {
     @Column(name = "update_at", nullable = false)
     private Instant updateAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updateAt = Instant.now();
+        used = 0;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updateAt = Instant.now();
+    }
+
 }

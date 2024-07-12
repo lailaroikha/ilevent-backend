@@ -51,6 +51,8 @@ public class ReferralServiceImpl implements ReferralService {
             referralRepository.save(referral);
             pointHistoryService.addPointsHistory(referringUser.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
 
+
+
             return "Referral code applied successfully";
         } else {
             return "No referral code provided";
