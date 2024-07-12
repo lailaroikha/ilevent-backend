@@ -1,6 +1,7 @@
 package com.ilevent.ilevent_backend.events.dto;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.promoReferral.dto.PromoReferralRequestDto;
 import com.ilevent.ilevent_backend.ticket.dto.TicketRequestDto;
 import com.ilevent.ilevent_backend.voucher.dto.VoucherRequestDto;
 import lombok.Data;
@@ -22,5 +23,7 @@ public class CreateEventRequestDto {
     private List<TicketRequestDto> tickets;
     //createVoucher
     private List<VoucherRequestDto> vouchers;
+    // Create Promo Referral
+    private PromoReferralRequestDto promoReferral;
 
 }

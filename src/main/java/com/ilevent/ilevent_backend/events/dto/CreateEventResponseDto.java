@@ -75,11 +75,6 @@ public class CreateEventResponseDto {
                     .map(VoucherResponseDto::fromEntity)
                     .collect(Collectors.toList()));
         }
-//        if (events.getTicket() != null) {
-//            dto.setTicket(events.getTicket().stream()
-//                    .map(TicketDto::fromEntity)
-//                    .collect(Collectors.toList()));
-//        }
         return dto;
     }
 }

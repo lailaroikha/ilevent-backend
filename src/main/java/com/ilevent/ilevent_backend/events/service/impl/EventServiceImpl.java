@@ -5,6 +5,7 @@ import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.events.service.EventService;
+import com.ilevent.ilevent_backend.promoReferral.repository.PromoReferralRepository;
 import com.ilevent.ilevent_backend.ticket.dto.TicketRequestDto;
 import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
@@ -37,14 +38,15 @@ public class EventServiceImpl implements EventService {
     private final TicketService ticketService;
     private final VoucherRepository voucherRepository;
     private final TicketRepository ticketRepository;
+    private final PromoReferralRepository promoReferralRepository;
 
-
-    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, TicketService ticketService, VoucherRepository voucherRepository, TicketRepository ticketRepository){
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, TicketService ticketService, VoucherRepository voucherRepository, TicketRepository ticketRepository, PromoReferralRepository promoReferralRepository){
         this.eventRepository = eventRepository;
         this.userRepository=userRepository;
         this.ticketService = ticketService;
         this.voucherRepository = voucherRepository;
         this.ticketRepository = ticketRepository;
+        this.promoReferralRepository = promoReferralRepository;
     }
 
     @Override
