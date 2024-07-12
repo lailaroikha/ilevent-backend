@@ -20,6 +20,7 @@ public class RegisterRequestDto implements Serializable {
     private String password;
     @NotNull (message ="Role is mandatory")
     private Boolean organizer;
+    private String phone;
     @NotBlank
     private String referralCode;
     @NotBlank (message = "Username is required")
@@ -31,6 +32,7 @@ public class RegisterRequestDto implements Serializable {
         users.setName(this.name);
         users.setUsername(this.username);
         users.setEmail(this.email);
+        users.setPhone(this.phone);
         users.setPassword(this.password);
         users.setReferralCode(this.referralCode);
         users.setOrganizer(this.organizer);
