@@ -10,6 +10,7 @@ public class RegisterResponseDto {
     private Boolean organizer;
     private String referralCode;
     private String username;
+    private String phone;
 
     public static RegisterResponseDto fromEntity(Users savedUser) {
         RegisterResponseDto dto = new RegisterResponseDto();
@@ -18,6 +19,7 @@ public class RegisterResponseDto {
         dto.setOrganizer(savedUser.getOrganizer());
         dto.setReferralCode(savedUser.getReferralCode());
         dto.setUsername(savedUser.getUsername());
+        dto.setPhone(savedUser.getPhone());
         return dto;
     }
 }
