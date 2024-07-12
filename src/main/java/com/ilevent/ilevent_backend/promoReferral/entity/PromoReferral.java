@@ -33,13 +33,13 @@ public class PromoReferral {
     private Integer promoValueDiscount;
 
     @Column(name = "start")
-    private Instant start;
+    private LocalDate start;
 
-    @Column(name = "\"end\"")
-    private Instant end;
+    @Column(name = "end")
+    private LocalDate end;
 
-    @Column (name = "expired")
-    private LocalDate expired;
+//    @Column (name = "expired")
+//    private LocalDate expired;
 
     @Column(name="used")
     private Integer used;
