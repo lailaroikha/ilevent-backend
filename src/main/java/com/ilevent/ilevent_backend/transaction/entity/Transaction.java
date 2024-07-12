@@ -1,4 +1,4 @@
-package com.ilevent.ilevent_backend.transaction;
+package com.ilevent.ilevent_backend.transaction.entity;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.pointsHistory.entity.PointsHistory;
@@ -44,10 +44,6 @@ public class Transaction {
     @NotNull
     @Column(name = "payment_status", nullable = false, length = 20)
     private String paymentStatus;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "promo_id")
-//    private Promo promo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_id")
