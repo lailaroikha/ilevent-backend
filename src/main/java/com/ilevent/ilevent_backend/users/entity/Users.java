@@ -64,6 +64,7 @@ public class Users {
     @Column(name = "referral_code")
     private String referralCode;
 
+
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
