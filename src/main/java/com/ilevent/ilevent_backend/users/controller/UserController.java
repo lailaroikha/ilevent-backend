@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilevent.ilevent_backend.responses.Response;
 import com.ilevent.ilevent_backend.users.dto.ReferralResponseDto;
 import com.ilevent.ilevent_backend.users.dto.RegisterRequestDto;
+import com.ilevent.ilevent_backend.users.dto.RegisterResponseDto;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.service.UserService;
 import com.ilevent.ilevent_backend.auth.helper.Claims;
@@ -30,6 +31,19 @@ public class UserController {
 
         this.userService = userService;
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDto registerRequestDto) {
+        try {
+            RegisterResponseDto response = userService.register(registerRequestDto);
+            return Response.success("User registered successfully", response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("An error occurred while registering the user");
+        }
+    }
+
     @RolesAllowed({"ROLE_PERSONAL", "ROLE_ORGANIZER"})
     @PutMapping(value = "/profile", consumes = { "multipart/form-data" })
     public ResponseEntity<?> updateProfile(@RequestPart("updateProfileDto") String updateProfileDtoString,
