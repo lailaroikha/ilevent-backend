@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Map;
 
 
@@ -66,8 +67,9 @@ public class UserServiceImpl implements UserService {
                 referral.setCreatedAt(now);
                 referral.setUpdatedAt(now);
                 referralRepository.save(referral);
+
                 //Add points to the referring user
-                pointHistoryService.addPointsHistory(referrer.getId(), 10000, "REFERRAL");
+                pointHistoryService.addPointsHistory(referrer.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
             }
 
         }

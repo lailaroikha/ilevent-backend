@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -48,14 +49,7 @@ public class ReferralServiceImpl implements ReferralService {
             referral.setUser(referringUser);
             referral.setReferredUserId(newUser);
             referralRepository.save(referral);
-
-            pointHistoryService.addPointsHistory(referringUser.getId(), 10000, "REFERRAL");
-
-//            PointsHistory pointsHistory = new PointsHistory();
-//            pointsHistory.setUser(referringUser);
-//            pointsHistory.setPoints(10000);
-//            pointsHistory.setType("REFERRAL");
-//            pointHistoryRepository.save(pointsHistory);
+            pointHistoryService.addPointsHistory(referringUser.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
 
             return "Referral code applied successfully";
         } else {

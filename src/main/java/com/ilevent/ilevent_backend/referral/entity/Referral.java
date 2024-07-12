@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.referral.entity;
 
+import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,8 @@ public class Referral {
     @JoinColumn(name = "referred_user_id")
     private Users referredUserId;
 
+
+
 //    @ColumnDefault("10000")
 //    @Column(name = "points")
 //    private Integer points;
@@ -43,6 +46,10 @@ public class Referral {
     @NotNull
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "events_id")
+    private Events events;
 
     @PrePersist
     protected void onCreate() {

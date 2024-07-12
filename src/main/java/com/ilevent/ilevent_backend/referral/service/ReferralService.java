@@ -10,4 +10,5 @@ public interface ReferralService {
 //    Referral getReferralDetails(Long userId);
     String applyReferralCode(Long userId, String referralCode);
 
+
 }

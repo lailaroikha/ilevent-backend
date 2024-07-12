@@ -8,6 +8,7 @@ import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Service
 public class PointHistoryServiceImpl implements PointHistoryService {
@@ -21,7 +22,7 @@ public class PointHistoryServiceImpl implements PointHistoryService {
 
 
     @Override
-    public PointsHistory addPointsHistory(Long userId, Integer points, String type) {
+    public PointsHistory addPointsHistory(Long userId, Integer points, String type, LocalDate expired) {
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -29,6 +30,7 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         pointsHistory.setUser(user);
         pointsHistory.setPoints(points);
         pointsHistory.setType(type);
+        pointsHistory.setExpired(expired);
         pointsHistory.setCreatedAt(Instant.now());
         pointsHistory.setUpdateAt(Instant.now());
         PointsHistory savedHistory = pointHistoryRepository.save(pointsHistory);
@@ -36,12 +38,12 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         return savedHistory;
     }
 
-    @Override
-    public Integer getTotalPoints(Long userId) {
-        Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return user.getTotalPoints();
-    }
+//    @Override
+//    public Integer getTotalPoints(Long userId) {
+//        Users user = userRepository.findById(userId)
+//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+//        return user.getTotalPoints();
+//    }
 
 //    @Override
 //    public PointHistoryResponseDto addPointsHistory(PointHistoryRequestDto dto) {

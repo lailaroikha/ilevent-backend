@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -27,6 +28,10 @@ public class PointsHistory {
     @Column(name = "points", nullable = false)
     private Integer points;
 
+    @Column(name = "expired")
+    private LocalDate expired;
+
+
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
@@ -42,6 +47,8 @@ public class PointsHistory {
     @NotNull
     @Column(name = "type", nullable = false, length = 20)
     private String type;
+
+
 
     @PrePersist
     protected void onCreate() {

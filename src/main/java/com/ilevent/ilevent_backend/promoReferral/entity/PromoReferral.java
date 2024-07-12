@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -36,6 +37,15 @@ public class PromoReferral {
 
     @Column(name = "\"end\"")
     private Instant end;
+
+    @Column (name = "expired")
+    private LocalDate expired;
+
+    @Column(name="used")
+    private Integer used;
+
+    @Column(name = "max_claims")
+    private Integer maxClaims;
 
     @NotNull
     @Column(name = "created_at", nullable = false)

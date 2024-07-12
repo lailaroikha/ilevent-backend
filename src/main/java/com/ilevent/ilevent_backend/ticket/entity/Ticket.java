@@ -42,6 +42,9 @@ public class Ticket {
     @Column(name = "price_after_discount")
     private Double priceAfterDiscount;
 
+    @Column(name="booked")
+    private Integer booked = 0;
+
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
