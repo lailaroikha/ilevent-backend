@@ -42,13 +42,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public RegisterResponseDto register(RegisterRequestDto user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()){
+    public RegisterResponseDto register(RegisterRequestDto registerRequestDto) {
+        if (userRepository.findByEmail(registerRequestDto.getEmail()).isPresent()){
             throw new RuntimeException("Email already exist");
         }
 
-        Users newUser = user.toEntity(); // Convert DTO to entity
-        var password = passwordEncoder.encode(user.getPassword());
+        Users newUser = registerRequestDto.toEntity(); // Convert DTO to entity
+        var password = passwordEncoder.encode(registerRequestDto.getPassword());
         newUser.setPassword(password);
 
         // Generate referral code using the name from the new user
@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
         newUser.setReferralCode(referralCode);
 
         Users savedUser = userRepository.save(newUser);
-        if (user.getReferralCode() != null) {
-            Users referrer = userRepository.findByReferralCode(user.getReferralCode())
+        if (registerRequestDto.getReferralCode() != null) {
+            Users referrer = userRepository.findByReferralCode(registerRequestDto.getReferralCode())
                     .orElseThrow(() -> new ApplicationException("Referral code not found"));
             if (referrer != null) {
                 Referral referral = new Referral();

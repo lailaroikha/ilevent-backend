@@ -33,15 +33,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDto registerRequestDto) {
-        try {
-            RegisterResponseDto response = userService.register(registerRequestDto);
-            return Response.success("User registered successfully", response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("An error occurred while registering the user");
-        }
+    public ResponseEntity<RegisterResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
+        RegisterResponseDto response = userService.register(registerRequestDto);
+        return ResponseEntity.ok(response);
     }
 
     @RolesAllowed({"ROLE_PERSONAL", "ROLE_ORGANIZER"})

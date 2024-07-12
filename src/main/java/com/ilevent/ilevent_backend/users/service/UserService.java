@@ -8,9 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface UserService {
-    RegisterResponseDto register(RegisterRequestDto req);
+    RegisterResponseDto register(RegisterRequestDto registerRequestDto);
 //    RegisterResponseDto findByEmail(String email);
     Users getUserById(Long id);
     String uploadProfilePicture(String username, MultipartFile file);
     Users updateProfile(String email, UpdateProfileDto updateProfileDto,  MultipartFile profilePicture);
+
 }
