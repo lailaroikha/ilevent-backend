@@ -2,7 +2,9 @@ package com.ilevent.ilevent_backend.transaction.entity;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.pointsHistory.entity.PointsHistory;
+import com.ilevent.ilevent_backend.ticketApply.entity.TicketApply;
 import com.ilevent.ilevent_backend.users.entity.Users;
+import com.ilevent.ilevent_backend.voucherApply.entity.VoucherApply;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,6 +15,8 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -49,6 +53,11 @@ public class Transaction {
     @JoinColumn(name = "point_id")
     private PointsHistory point;
 
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TicketApply> ticketApplies = new HashSet<>();
+
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VoucherApply> voucherApplies = new HashSet<>();
 
     @NotNull
     @Column(name = "created_at", nullable = false)
