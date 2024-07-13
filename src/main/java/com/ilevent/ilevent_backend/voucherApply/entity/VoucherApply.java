@@ -1,6 +1,8 @@
 package com.ilevent.ilevent_backend.voucherApply.entity;
 
+import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
 import com.ilevent.ilevent_backend.transaction.entity.Transaction;
+import com.ilevent.ilevent_backend.voucher.entity.Voucher;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,6 +22,14 @@ public class VoucherApply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transactions_id")
     private Transaction transactions;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promo_referral_id")
+    private PromoReferral promoReferral;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
