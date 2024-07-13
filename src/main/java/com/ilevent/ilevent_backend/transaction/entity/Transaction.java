@@ -49,9 +49,10 @@ public class Transaction {
     @JoinColumn(name = "point_id")
     private PointsHistory point;
 
+
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private Integer createdAt;
+    private Instant createdAt;
 
     @NotNull
     @Column(name = "updated_at", nullable = false)
