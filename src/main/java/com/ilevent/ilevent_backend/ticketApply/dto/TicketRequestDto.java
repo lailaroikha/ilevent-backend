@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TicketRequestDto {
-    private Long voucherId;
-
+    private Long ticketId;
+    private Integer quantity;
 }
