@@ -15,17 +15,17 @@ import java.time.Instant;
 @Table(name = "ticket_apply", schema = "ilevent")
 public class TicketApply {
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "transaction_id", nullable = false)
-    private Transaction transaction;
+    private Transaction transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id")
-    private Ticket ticket;
+    private Ticket ticketId;
 
     @NotNull
     @Column(name = "quantity", nullable = false)
