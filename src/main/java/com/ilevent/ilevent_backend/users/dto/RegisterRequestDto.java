@@ -21,7 +21,6 @@ public class RegisterRequestDto implements Serializable {
     @NotNull (message ="Role is mandatory")
     private Boolean organizer;
     private String phone;
-    @NotBlank
     private String referralCode;
     @NotBlank (message = "Username is required")
     private String username;
