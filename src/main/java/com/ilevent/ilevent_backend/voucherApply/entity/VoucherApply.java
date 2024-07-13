@@ -21,16 +21,20 @@ public class VoucherApply {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transactions_id")
-    private Transaction transactions;
+    @JoinColumn(name = "transaction_id")
+    private Transaction transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promo_referral_id")
-    private PromoReferral promoReferral;
+    private PromoReferral promoReferralId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_id")
-    private Voucher voucher;
+    private Voucher voucherId;
+
+    @NotNull
+    @Column(name = "quantity", nullable = false)  // Menambahkan field quantity
+    private Integer quantity;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
