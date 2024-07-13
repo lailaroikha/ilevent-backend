@@ -29,7 +29,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/v1/events")
 @Validated
 @Log
 public class EventsController {
