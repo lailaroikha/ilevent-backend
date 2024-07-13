@@ -21,13 +21,13 @@ public class PromoReferral {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "events_id")
     private Events eventsId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id")
-    private Users usersID;
+    private Users usersId;
 
     @Column(name = "promo_value_discount")
     private Integer promoValueDiscount;
@@ -35,7 +35,7 @@ public class PromoReferral {
     @Column(name = "start")
     private LocalDate start;
 
-    @Column(name = "end")
+    @Column(name = "\"end\"")
     private LocalDate end;
 
 //    @Column (name = "expired")

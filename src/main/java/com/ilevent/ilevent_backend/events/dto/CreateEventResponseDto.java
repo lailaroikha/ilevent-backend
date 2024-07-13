@@ -1,6 +1,7 @@
 package com.ilevent.ilevent_backend.events.dto;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.promoReferral.dto.PromoReferralResponseDto;
 import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
 import com.ilevent.ilevent_backend.voucher.dto.VoucherResponseDto;
 import lombok.Data;
@@ -25,6 +26,8 @@ public class CreateEventResponseDto {
     //Ticket and Voucher
     private List<TicketResponseDto> tickets;
     private List<VoucherResponseDto> vouchers;
+
+    private PromoReferralResponseDto promoReferral;
 
 //    private List<TicketDto> ticket;
 
@@ -75,6 +78,12 @@ public class CreateEventResponseDto {
                     .map(VoucherResponseDto::fromEntity)
                     .collect(Collectors.toList()));
         }
+
+        // Promo Referral
+        if (events.getPromoReferral() != null) {
+            dto.setPromoReferral(PromoReferralResponseDto.fromEntity(events.getPromoReferral()));
+        }
+
         return dto;
     }
 }

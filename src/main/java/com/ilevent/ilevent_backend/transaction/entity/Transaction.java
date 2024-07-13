@@ -12,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -32,9 +33,8 @@ public class Transaction {
     @JoinColumn(name = "event_id")
     private Events event;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "transaction_date")
-    private Instant transactionDate;
+    private LocalDate transactionDate;
 
     @NotNull
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)

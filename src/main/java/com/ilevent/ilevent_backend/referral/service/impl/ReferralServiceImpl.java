@@ -1,10 +1,8 @@
 package com.ilevent.ilevent_backend.referral.service.impl;
 
 import com.ilevent.ilevent_backend.pointsHistory.Service.PointHistoryService;
-import com.ilevent.ilevent_backend.pointsHistory.entity.PointsHistory;
-import com.ilevent.ilevent_backend.pointsHistory.repository.PointHistoryRepository;
-//import com.ilevent.ilevent_backend.referral.dto.ReferralResponseDto;
-//import com.ilevent.ilevent_backend.referral.dto.ReferralRequestDto;
+import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
+import com.ilevent.ilevent_backend.promoReferral.repository.PromoReferralRepository;
 import com.ilevent.ilevent_backend.referral.entity.Referral;
 import com.ilevent.ilevent_backend.referral.repository.ReferralRepository;
 import com.ilevent.ilevent_backend.referral.service.ReferralService;
@@ -22,11 +20,13 @@ public class ReferralServiceImpl implements ReferralService {
     private final ReferralRepository referralRepository;
     private final UserRepository userRepository;
     private final PointHistoryService pointHistoryService;
+    private final PromoReferralRepository promoReferralRepository;
 
-    public ReferralServiceImpl(ReferralRepository referralRepository, UserRepository userRepository, PointHistoryService pointHistoryService) {
+    public ReferralServiceImpl(ReferralRepository referralRepository, UserRepository userRepository, PointHistoryService pointHistoryService, PromoReferralRepository promoReferralRepository) {
         this.referralRepository = referralRepository;
         this.userRepository = userRepository;
         this.pointHistoryService =pointHistoryService;
+        this.promoReferralRepository = promoReferralRepository;
     }
 
     @Transactional
@@ -51,7 +51,18 @@ public class ReferralServiceImpl implements ReferralService {
             referralRepository.save(referral);
             pointHistoryService.addPointsHistory(referringUser.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
 
-
+            // Create promo referral for the referred user
+            PromoReferral promoReferral = new PromoReferral();
+            promoReferral.setEventsId(null); // need to link it to the specific event if required
+            promoReferral.setUsersId(newUser);
+            promoReferral.setPromoValueDiscount(10); // 10% discount for referral
+            promoReferral.setStart(LocalDate.now());
+            promoReferral.setEnd(LocalDate.now().plusMonths(3));
+            promoReferral.setMaxClaims(1); // Only the referred user can use it
+            promoReferral.setUsed(0);
+            promoReferral.setCreatedAt(Instant.now());
+            promoReferral.setUpdateAt(Instant.now());
+            promoReferralRepository.save(promoReferral);
 
             return "Referral code applied successfully";
         } else {

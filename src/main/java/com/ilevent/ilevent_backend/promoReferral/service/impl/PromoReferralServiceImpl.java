@@ -12,6 +12,7 @@ import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -29,19 +30,23 @@ public class PromoReferralServiceImpl implements PromoReferralService {
 
     @Override
     public PromoReferralResponseDto createPromoReferral(PromoReferralRequestDto dto) {
-        Optional<Events> eventsOptional = eventRepository.findById(dto.getEventsId());
+        // Replace with appropriate event ID and user ID from request DTO
+        Long eventsId = 1L; // replace with actual event ID from the request
+        Long usersId = 1L; // replace with actual user ID from the request
+
+        Optional<Events> eventsOptional = eventRepository.findById(eventsId);
         if (eventsOptional.isEmpty()) {
             throw new IllegalArgumentException("Event not found");
         }
 
-        Optional<Users> userOptional = userRepository.findById(dto.getUsersID());
+        Optional<Users> userOptional = userRepository.findById(usersId);
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
         PromoReferral promoReferral = new PromoReferral();
         promoReferral.setEventsId(eventsOptional.get());
-        promoReferral.setUsersID(userOptional.get());
+        promoReferral.setUsersId(userOptional.get());
         promoReferral.setPromoValueDiscount(10); // Always 10% discount for referral
         promoReferral.setStart(dto.getStart());
         promoReferral.setEnd(dto.getEnd());
@@ -56,11 +61,16 @@ public class PromoReferralServiceImpl implements PromoReferralService {
 
     @Override
     public PromoReferralResponseDto getPromoReferralByEventId(Long eventsId) {
-        Optional<PromoReferral> promoReferralOptional = promoReferralRepository.findByEventsId(eventsId);
-        if (promoReferralOptional.isEmpty()) {
+        Optional<Events> eventsOptional = eventRepository.findById(eventsId);
+        if (eventsOptional.isEmpty()) {
+            throw new IllegalArgumentException("Event not found");
+        }
+        Events event = eventsOptional.get();
+        List<PromoReferral> promoReferralList = promoReferralRepository.findByEventsId(event);
+        if (promoReferralList.isEmpty()) {
             throw new IllegalArgumentException("Promo referral not found for event id: " + eventsId);
         }
-        return PromoReferralResponseDto.fromEntity(promoReferralOptional.get());
+        return PromoReferralResponseDto.fromEntity(promoReferralList.get(0));
     }
 
     @Override

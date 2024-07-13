@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.events.entity;
 
+import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.voucher.entity.Voucher;
@@ -101,6 +102,9 @@ public class Events {
 
     @OneToMany(mappedBy = "eventId")
     private List<Voucher> vouchers;
+
+    @OneToOne(mappedBy = "eventsId", cascade = CascadeType.ALL)
+    private PromoReferral promoReferral;
 
     public enum CategoryType {
         music,

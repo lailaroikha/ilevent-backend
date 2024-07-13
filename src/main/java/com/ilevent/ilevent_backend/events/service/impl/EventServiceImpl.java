@@ -5,6 +5,8 @@ import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.events.service.EventService;
+import com.ilevent.ilevent_backend.promoReferral.dto.PromoReferralRequestDto;
+import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
 import com.ilevent.ilevent_backend.promoReferral.repository.PromoReferralRepository;
 import com.ilevent.ilevent_backend.ticket.dto.TicketRequestDto;
 import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
@@ -122,6 +124,24 @@ public class EventServiceImpl implements EventService {
 //        }
 //        return CreateEventResponseDto.fromEntity(savedEvent);
         }
+
+        // Create promo referral
+        if (dto.getPromoReferral() != null) {
+            PromoReferralRequestDto promoReferralDto = dto.getPromoReferral();
+            PromoReferral promoReferral = new PromoReferral();
+            promoReferral.setEventsId(savedEvent);
+            promoReferral.setUsersId(user);
+            promoReferral.setPromoValueDiscount(10); // Always 10% discount for referral
+            promoReferral.setStart(promoReferralDto.getStart());
+            promoReferral.setEnd(promoReferralDto.getEnd());
+            promoReferral.setMaxClaims(promoReferralDto.getMaxClaims());
+            promoReferral.setUsed(0);
+            promoReferral.setCreatedAt(Instant.now());
+            promoReferral.setUpdateAt(Instant.now());
+            savedEvent.setPromoReferral(promoReferral); // Link promo referral to event
+            promoReferralRepository.save(promoReferral);
+        }
+
         CreateEventResponseDto responseDto = CreateEventResponseDto.fromEntity(savedEvent);
         if (savedTickets != null) {
             responseDto.setTickets(savedTickets.stream()

@@ -9,7 +9,6 @@ import java.time.LocalDate;
 public class PromoReferralResponseDto {
     private Long id;
     private Long eventsId;
-    private Long usersID;
     private Integer promoValueDiscount;
     private LocalDate start;
     private LocalDate end;
@@ -20,7 +19,6 @@ public class PromoReferralResponseDto {
         PromoReferralResponseDto dto = new PromoReferralResponseDto();
         dto.setId(promoReferral.getId());
         dto.setEventsId(promoReferral.getEventsId().getId());
-        dto.setUsersID(promoReferral.getUsersID().getId());
         dto.setPromoValueDiscount(promoReferral.getPromoValueDiscount());
         dto.setStart(promoReferral.getStart());
         dto.setEnd(promoReferral.getEnd());
