@@ -1,7 +1,7 @@
 package com.ilevent.ilevent_backend.events.controller;
 
 
-import com.cloudinary.Cloudinary;
+
 import com.ilevent.ilevent_backend.auth.helper.Claims;
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
 import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
@@ -11,6 +11,7 @@ import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.responses.Response;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/events")
 @Validated
@@ -41,8 +40,8 @@ public class EventsController {
         this.cloudinaryService =cloudinaryService;
     }
 
-    @PostMapping("/uploud")
-    public ResponseEntity<String> uploudImages(@RequestParam("file")MultipartFile file) {
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImages(@RequestParam("file")MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is missing");
         }

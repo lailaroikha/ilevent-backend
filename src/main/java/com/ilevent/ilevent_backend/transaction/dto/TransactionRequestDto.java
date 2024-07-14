@@ -13,6 +13,6 @@ public class TransactionRequestDto {
     private List<TicketApplyRequestDto> tickets;
     private List<VoucherApplyRequestDto> vouchers;
     private Long promoReferralId;
-    private Double amountAfterDiscount;
+//    private Double amountAfterDiscount;
     private Double pointsDiscount;
 }
