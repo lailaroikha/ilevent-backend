@@ -77,6 +77,7 @@ public class EventServiceImpl implements EventService {
         // Set parsed date and time to entity
         events.setDate(parsedDate);
         events.setTime(parsedTime);
+        events.setIsFreeEvent(dto.getIsFreeEvent());
         // Set organizer ke event
         events.setOrganizer(user);
         events.setLocation(dto.getLocation());

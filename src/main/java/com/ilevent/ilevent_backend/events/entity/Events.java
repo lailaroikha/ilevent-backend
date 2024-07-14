@@ -64,8 +64,7 @@ public class Events {
     @Column(name="image",nullable = false)
     private String image;
 
-    @ColumnDefault("false")
-    @Column(name = "is_freeEvent")
+    @Column(name = "is_free_event")
     private Boolean isFreeEvent;
 
     @Column(name = "deleted_at")
