@@ -41,7 +41,7 @@ public class Voucher {
 
     @ColumnDefault("0")
     @Column(name = "used")
-    private Integer used;
+    private Integer used = 0;
 
     @Column(name = "expired_at")
     private LocalDate expiredAt;
