@@ -56,7 +56,7 @@ public class EventsController {
     @GetMapping
     public ResponseEntity<Page<Events>> getAllEvents(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "16") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Events> events = eventService.getAllEvents(pageable);
         return new ResponseEntity<>(events, HttpStatus.OK);
