@@ -1,5 +1,7 @@
 package com.ilevent.ilevent_backend.events.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
 import com.ilevent.ilevent_backend.users.entity.Users;
@@ -22,13 +24,13 @@ public class Events {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "users_id_gen", sequenceName = "users_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id", nullable = false)
+    @JsonBackReference
     private Users organizer;
 
     @NotNull
@@ -97,13 +99,16 @@ public class Events {
     @Column(name = "category", nullable = false, length = 20)
     private CategoryType category;
 
-    @OneToMany(mappedBy = "eventId")
+    @OneToMany(mappedBy = "eventId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "eventId")
+    @OneToMany(mappedBy = "eventId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Voucher> vouchers;
 
     @OneToOne(mappedBy = "eventsId", cascade = CascadeType.ALL)
+    @JsonIgnore
     private PromoReferral promoReferral;
 
     public enum CategoryType {

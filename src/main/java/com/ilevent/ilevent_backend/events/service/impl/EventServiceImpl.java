@@ -53,6 +53,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Events> getAllEvents(Pageable pageable) {
+
         return eventRepository.findAll(pageable);
     }
 
@@ -79,7 +80,7 @@ public class EventServiceImpl implements EventService {
         // Set organizer ke event
         events.setOrganizer(user);
         events.setLocation(dto.getLocation());
-        events.setIsFreeEvent(dto.getIsFreeEvent());
+//        events.setIsFreeEvent(dto.getIsFreeEvent());
         events.setImage(dto.getImage());
         events.setCategory(dto.getCategory());
 //        eventRepository.save(events);
