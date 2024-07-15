@@ -28,4 +28,7 @@ public interface EventService {
     List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent);
 
     void deleteEvent(Long id);
+
+    // Tambahkan metode searchEvents
+    List<CreateEventResponseDto> searchEvents(String keyword);
 }

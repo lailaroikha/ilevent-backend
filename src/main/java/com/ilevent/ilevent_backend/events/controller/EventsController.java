@@ -96,5 +96,11 @@ public class EventsController {
         return Response.success("Event deleted successfully");
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchEvents(@RequestParam String keyword) {
+        List<CreateEventResponseDto> events = eventService.searchEvents(keyword);
+        return Response.success("Search results retrieved successfully", events);
+    }
+
 
 }

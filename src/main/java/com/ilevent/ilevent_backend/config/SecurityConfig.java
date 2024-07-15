@@ -78,6 +78,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/events/{id}").permitAll();
                     auth.requestMatchers("/api/v1/events").permitAll();
                     auth.requestMatchers("/api/v1/events/filter/**").permitAll();
+                    auth.requestMatchers("/api/v1/events/search/**").permitAll();
                     auth.requestMatchers("/api/v1/referral/").hasAnyRole("PERSONAL");
                     auth.requestMatchers("/api/transactions/**").hasRole("PERSONAL");
                     auth.anyRequest().authenticated();

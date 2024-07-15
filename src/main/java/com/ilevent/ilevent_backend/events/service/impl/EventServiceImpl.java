@@ -202,20 +202,27 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByIsFreeEvent(isFreeEvent);
     }
 
-//    @Override
-//    public List<Events> getEventsByAvailableSeats(Integer availableSeats) {
-//        return eventRepository.findByAvailableSeatsGreaterThanEqual(availableSeats);
-//    }
-
-//    @Override
-//    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats) {
-//        List<Events> events = eventRepository.findByCategoryAndDateAndIsFreeEventAndAvailableSeatsGreaterThanEqual(category, date, isFreeEvent, availableSeats);
-//        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
-//    }
 
     @Override
     public void deleteEvent(Long id) {
         eventRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CreateEventResponseDto> searchEvents(String keyword) {
+        Specification<Events> spec = new Specification<Events>() {
+            @Override
+            public Predicate toPredicate(Root<Events> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.or(
+                        cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%"),
+                        cb.like(cb.lower(root.get("description")), "%" + keyword.toLowerCase() + "%"),
+                        cb.like(cb.lower(root.get("location")), "%" + keyword.toLowerCase() + "%")
+                );
+            }
+        };
+
+        List<Events> events = eventRepository.findAll(spec);
+        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
     }
 
     @Override
