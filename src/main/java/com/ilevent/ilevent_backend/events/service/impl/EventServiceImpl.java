@@ -226,8 +226,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent) {
-        log.info("Filtering events with parameters - category: {}, date: {}, isFreeEvent: {}, availableSeats: {}");
+    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location) {
+        log.info("Filtering events with parameters - category: {}, date: {}, isFreeEvent: {}, location: {}");
 
         Specification<Events> spec = new Specification<Events>() {
             @Override
@@ -242,6 +242,9 @@ public class EventServiceImpl implements EventService {
                 }
                 if (isFreeEvent != null) {
                     predicates.add(cb.equal(root.get("isFreeEvent"), isFreeEvent));
+                }
+                if (location != null && !location.isEmpty()) {
+                    predicates.add(cb.like(cb.lower(root.get("location")), "%" + location.toLowerCase() + "%"));
                 }
 //                if (availableSeats != null) {
 //                    Subquery<Long> ticketSubquery = query.subquery(Long.class);

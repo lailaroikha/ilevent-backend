@@ -82,10 +82,11 @@ public class EventsController {
     public ResponseEntity<?> getFilteredEvents(
             @RequestParam(required = false) Events.CategoryType category,
             @RequestParam(required = false) LocalDate date,
-            @RequestParam(required = false) Boolean isFreeEvent
+            @RequestParam(required = false) Boolean isFreeEvent,
+            @RequestParam(required = false) String location
 //            @RequestParam(required = false) Integer availableSeats
     ) {
-        List<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent);
+        List<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent, location);
         return Response.success("Filtered events retrieved successfully", events);
     }
 
