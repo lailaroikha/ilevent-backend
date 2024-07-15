@@ -6,6 +6,7 @@ import com.ilevent.ilevent_backend.exceptions.ApplicationException;
 import com.ilevent.ilevent_backend.pointsHistory.Service.PointHistoryService;
 import com.ilevent.ilevent_backend.referral.entity.Referral;
 import com.ilevent.ilevent_backend.referral.repository.ReferralRepository;
+import com.ilevent.ilevent_backend.users.dto.ProfileResponseDto;
 import com.ilevent.ilevent_backend.users.dto.RegisterRequestDto;
 import com.ilevent.ilevent_backend.users.dto.RegisterResponseDto;
 import com.ilevent.ilevent_backend.users.dto.UpdateProfileDto;
@@ -149,5 +150,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public ProfileResponseDto getProfile(Long id) {
+        Users user = getUserById(id);
+        return ProfileResponseDto.fromEntity(user);
     }
 }

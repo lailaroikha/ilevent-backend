@@ -3,9 +3,7 @@ package com.ilevent.ilevent_backend.users.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilevent.ilevent_backend.responses.Response;
-import com.ilevent.ilevent_backend.users.dto.ReferralResponseDto;
-import com.ilevent.ilevent_backend.users.dto.RegisterRequestDto;
-import com.ilevent.ilevent_backend.users.dto.RegisterResponseDto;
+import com.ilevent.ilevent_backend.users.dto.*;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.service.UserService;
 import com.ilevent.ilevent_backend.auth.helper.Claims;
@@ -16,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.ilevent.ilevent_backend.users.dto.UpdateProfileDto;
 
 import java.io.IOException;
 
@@ -70,6 +67,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
+
+
     @RolesAllowed({"ROLE_PERSONAL", "ROLE_ORGANIZER"})
     @PostMapping("/profile/picture")
     public ResponseEntity<?> uploadProfilePicture(@RequestParam("file") MultipartFile file) {
@@ -79,4 +79,19 @@ public class UserController {
         String imageUrl = userService.uploadProfilePicture(email, file);
         return Response.success("Profile picture uploaded successfully", imageUrl);
     }
+
+    @RolesAllowed({"ROLE_PERSONAL", "ROLE_ORGANIZER"})
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileResponseDto> getProfile() {
+        try {
+            var claims = Claims.getClaimsFromJwt();
+            var userId = Long.parseLong(claims.get("userId").toString());
+            ProfileResponseDto response = userService.getProfile(userId);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ProfileResponseDto());
+        }
+    }
+
+
 }
