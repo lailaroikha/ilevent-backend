@@ -25,7 +25,7 @@ public interface EventService {
     List<Events> getEventsByPrice(Boolean isFreeEvent);
 
     // Combine filters
-    List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location);
+    List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword);
 
     void deleteEvent(Long id);
 
