@@ -8,14 +8,14 @@ import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.promoReferral.dto.PromoReferralRequestDto;
 import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
 import com.ilevent.ilevent_backend.promoReferral.repository.PromoReferralRepository;
-import com.ilevent.ilevent_backend.ticket.dto.TicketRequestDto;
+import jakarta.persistence.criteria.*;
+import org.springframework.data.jpa.domain.Specification;
 import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
 import com.ilevent.ilevent_backend.ticket.repository.TicketRepository;
 import com.ilevent.ilevent_backend.ticket.service.TicketService;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
-import com.ilevent.ilevent_backend.voucher.dto.VoucherRequestDto;
 import com.ilevent.ilevent_backend.voucher.dto.VoucherResponseDto;
 import com.ilevent.ilevent_backend.voucher.entity.Voucher;
 import com.ilevent.ilevent_backend.voucher.repository.VoucherRepository;
@@ -24,7 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
@@ -200,20 +202,58 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByIsFreeEvent(isFreeEvent);
     }
 
-    @Override
-    public List<Events> getEventsByAvailableSeats(Integer availableSeats) {
-        return eventRepository.findByAvailableSeatsGreaterThanEqual(availableSeats);
-    }
+//    @Override
+//    public List<Events> getEventsByAvailableSeats(Integer availableSeats) {
+//        return eventRepository.findByAvailableSeatsGreaterThanEqual(availableSeats);
+//    }
 
-    @Override
-    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats) {
-        List<Events> events = eventRepository.findByCategoryAndDateAndIsFreeEventAndAvailableSeatsGreaterThanEqual(category, date, isFreeEvent, availableSeats);
-        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats) {
+//        List<Events> events = eventRepository.findByCategoryAndDateAndIsFreeEventAndAvailableSeatsGreaterThanEqual(category, date, isFreeEvent, availableSeats);
+//        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
+//    }
 
     @Override
     public void deleteEvent(Long id) {
         eventRepository.deleteById(id);
     }
+
+    @Override
+    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent) {
+        log.info("Filtering events with parameters - category: {}, date: {}, isFreeEvent: {}, availableSeats: {}");
+
+        Specification<Events> spec = new Specification<Events>() {
+            @Override
+            public Predicate toPredicate(Root<Events> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (category != null) {
+                    predicates.add(cb.equal(root.get("category"), category));
+                }
+                if (date != null) {
+                    predicates.add(cb.equal(root.get("date"), date));
+                }
+                if (isFreeEvent != null) {
+                    predicates.add(cb.equal(root.get("isFreeEvent"), isFreeEvent));
+                }
+//                if (availableSeats != null) {
+//                    Subquery<Long> ticketSubquery = query.subquery(Long.class);
+//                    Root<Events> subRoot = ticketSubquery.from(Events.class);
+//                    Join<Object, Object> ticketJoin = subRoot.join("tickets");
+//                    ticketSubquery.select(cb.sum(ticketJoin.get("availableSeats")));
+//                    ticketSubquery.where(cb.equal(subRoot.get("id"), root.get("id")));
+//                    predicates.add(cb.greaterThanOrEqualTo(totalAvailableSeats, availableSeats));
+//                }
+
+                return cb.and(predicates.toArray(new Predicate[0]));
+            }
+        };
+
+        List<Events> events = eventRepository.findAll(spec);
+        log.info("Found {} events");
+
+        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
+    }
+
 
 }

@@ -24,10 +24,8 @@ public interface EventService {
 
     List<Events> getEventsByPrice(Boolean isFreeEvent);
 
-    List<Events> getEventsByAvailableSeats(Integer availableSeats);
-
     // Combine filters
-    List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, Integer availableSeats);
+    List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent);
 
     void deleteEvent(Long id);
 }
