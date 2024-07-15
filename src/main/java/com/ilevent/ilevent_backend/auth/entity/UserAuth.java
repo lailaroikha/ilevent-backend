@@ -26,8 +26,9 @@ public class UserAuth extends Users implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> authorities = new ArrayList<>();
+        if (Boolean.TRUE.equals(users.getOrganizer())) {
         // Add role based on is_organizer field
-        if (users.isOrganizer()) {
+//        if (users.isOrganizer()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ORGANIZER"));
         } else {
             authorities.add(new SimpleGrantedAuthority("ROLE_PERSONAL"));

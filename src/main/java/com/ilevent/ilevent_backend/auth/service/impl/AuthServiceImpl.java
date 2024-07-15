@@ -2,6 +2,7 @@ package com.ilevent.ilevent_backend.auth.service.impl;
 
 //import com.ilevent.ilevent_backend.auth.repository.AuthRedisRepository;
 import com.ilevent.ilevent_backend.auth.service.AuthService;
+import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import lombok.extern.java.Log;
 import org.springframework.security.core.Authentication;
@@ -41,6 +42,9 @@ public class AuthServiceImpl implements AuthService {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
+        Users user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+
+        String role = user.isOrganizer() ? "ROLE_ORGANIZER" : "ROLE_PERSONAL";
 
 //        var existingKey = authRedisRepository.getJwtKey(authentication.getName());
 //        if (existingKey != null) {
@@ -54,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .claim("userId", userRepository.findByEmail(authentication.getName()).get().getId())
+                .claim("role", role)
                 .build();
 
         var jwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
