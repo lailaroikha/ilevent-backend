@@ -84,11 +84,26 @@ public class EventsController {
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) Boolean isFreeEvent,
             @RequestParam(required = false) String location,
-            @RequestParam(required = false) String keyword
-//            @RequestParam(required = false) Integer availableSeats
-    ) {
-        List<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent, location, keyword);
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "16") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent, location, keyword, pageable);
         return Response.success("Filtered events retrieved successfully", events);
+//            @RequestParam(required = false) Events.CategoryType category,
+//            @RequestParam(required = false) LocalDate date,
+//            @RequestParam(required = false) Boolean isFreeEvent,
+//            @RequestParam(required = false) String location,
+//            @RequestParam(required = false) String keyword,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "16") int size) {
+//
+//            Pageable pageable = PageRequest.of(page, size);
+////            @RequestParam(required = false) Integer availableSeats
+//    )
+//        List<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent, location, keyword);
+//        return Response.success("Filtered events retrieved successfully", events);
     }
 
     @RolesAllowed("ROLE_ORGANIZER")
