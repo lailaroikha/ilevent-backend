@@ -54,9 +54,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Events> getAllEvents(Pageable pageable) {
-
-        return eventRepository.findAll(pageable);
+    public Page<CreateEventResponseDto> getAllEvents(Pageable pageable) {
+        Page<Events> eventsPage = eventRepository.findAll(pageable);
+        return eventsPage.map(CreateEventResponseDto::fromEntity);
     }
 
     @Transactional
@@ -226,7 +226,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword) {
+    public Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword,  Pageable pageable) {
         log.info("Filtering events with parameters - category: {}, date: {}, isFreeEvent: {}, location: {}, keyword");
 
         Specification<Events> spec = new Specification<Events>() {
@@ -264,11 +264,14 @@ public class EventServiceImpl implements EventService {
                 return cb.and(predicates.toArray(new Predicate[0]));
             }
         };
-
-        List<Events> events = eventRepository.findAll(spec);
+        Page<Events> eventsPage = eventRepository.findAll(spec, pageable);
         log.info("Found {} events");
 
-        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
+        return eventsPage.map(CreateEventResponseDto::fromEntity);
+//        List<Events> events = eventRepository.findAll(spec);
+//        log.info("Found {} events");
+//
+//        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
     }
 
 

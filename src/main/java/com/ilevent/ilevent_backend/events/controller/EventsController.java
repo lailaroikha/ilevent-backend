@@ -54,13 +54,20 @@ public class EventsController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Events>> getAllEvents(
+    public ResponseEntity<Page<CreateEventResponseDto>> getAllEvents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "16") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Events> events = eventService.getAllEvents(pageable);
+        Page<CreateEventResponseDto> events = eventService.getAllEvents(pageable);
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
+//    public ResponseEntity<Page<Events>> getAllEvents(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "16") int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Events> events = eventService.getAllEvents(pageable);
+//        return new ResponseEntity<>(events, HttpStatus.OK);
+//    }
 
     @RolesAllowed("ROLE_ORGANIZER")
     @PostMapping("/create")
@@ -84,10 +91,12 @@ public class EventsController {
             @RequestParam(required = false) LocalDate date,
             @RequestParam(required = false) Boolean isFreeEvent,
             @RequestParam(required = false) String location,
-            @RequestParam(required = false) String keyword
-//            @RequestParam(required = false) Integer availableSeats
-    ) {
-        List<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent, location, keyword);
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "16") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CreateEventResponseDto> events = eventService.getFilteredEvents(category, date, isFreeEvent, location, keyword, pageable);
         return Response.success("Filtered events retrieved successfully", events);
     }
 
