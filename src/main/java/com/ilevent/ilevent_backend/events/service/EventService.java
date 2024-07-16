@@ -16,7 +16,8 @@ public interface EventService {
     Events updateEvent(Events event);
     CreateEventResponseDto getEventById(Long id);
     void deletedEvent(Long id);
-    Page<Events> getAllEvents(Pageable pageable);
+//    Page<Events> getAllEvents(Pageable pageable);
+    Page<CreateEventResponseDto> getAllEvents(Pageable pageable);
 
     List<Events> getEventsByCategory(Events.CategoryType category);
 

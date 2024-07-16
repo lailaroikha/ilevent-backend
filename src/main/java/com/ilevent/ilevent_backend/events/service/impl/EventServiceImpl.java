@@ -54,9 +54,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Events> getAllEvents(Pageable pageable) {
-
-        return eventRepository.findAll(pageable);
+    public Page<CreateEventResponseDto> getAllEvents(Pageable pageable) {
+        Page<Events> eventsPage = eventRepository.findAll(pageable);
+        return eventsPage.map(CreateEventResponseDto::fromEntity);
     }
 
     @Transactional

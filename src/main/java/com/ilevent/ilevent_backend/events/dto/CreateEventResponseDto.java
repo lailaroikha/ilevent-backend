@@ -18,7 +18,7 @@ public class CreateEventResponseDto {
     private String location;
     private String date;
     private String time;
-    private String imageUrl;
+    private String image;
     private Boolean isFreeEvent;
     private Integer eventCategoriesId;
     private Events.CategoryType category;
@@ -56,7 +56,7 @@ public class CreateEventResponseDto {
         dto.setLocation(events.getLocation());
         dto.setDate(events.getDate().toString());
         dto.setTime(events.getTime().toString());
-        dto.setImageUrl(events.getImage());
+        dto.setImage(events.getImage());
         dto.setIsFreeEvent(events.getIsFreeEvent());
         dto.setCategory(events.getCategory());
 
