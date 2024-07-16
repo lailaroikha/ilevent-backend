@@ -24,6 +24,7 @@ public class Ticket {
     @JoinColumn(name = "event_id")
     private Events eventId;
 
+
     @Size(max = 50)
     @NotNull
     @Column(name = "name_ticket", nullable = false, length = 50)

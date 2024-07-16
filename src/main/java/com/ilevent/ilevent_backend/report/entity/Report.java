@@ -24,7 +24,7 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    private Events event;
+    private Events eventId;
 
     @ColumnDefault("0")
     @Column(name = "attendees")
