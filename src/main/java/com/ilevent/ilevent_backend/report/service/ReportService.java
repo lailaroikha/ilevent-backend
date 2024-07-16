@@ -1,7 +1,12 @@
 package com.ilevent.ilevent_backend.report.service;
 
+import com.ilevent.ilevent_backend.report.entity.Report;
+
+import java.util.List;
+
 public interface ReportService {
-//    void updateReportForEvent(Long eventId, Long organizerId);
-    Integer getTotalAttendanceForEvent(Long eventId);
-    Integer getTotalAttendanceForOrganizer(Long organizerId);
+    List<Report> getReportsForInterval(int minutes);
+    List<Report> getDailyReports();
+    List<Report> getWeeklyReports();
+    List<Report> getMonthlyReports();
 }

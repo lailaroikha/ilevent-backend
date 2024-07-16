@@ -1,8 +1,6 @@
 package com.ilevent.ilevent_backend.report.entity;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
-import com.ilevent.ilevent_backend.ticketApply.entity.TicketApply;
-import com.ilevent.ilevent_backend.transaction.entity.Transaction;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -29,11 +27,11 @@ public class Report {
     private Events eventId;
 
     @ColumnDefault("0")
-    @Column(name = "attendees")
-    private Integer attendees;
+    @Column(name = "ticket_sold")
+    private Integer ticketSold;
 
     @ColumnDefault("0")
-    @Column(name = "total_revenue", precision = 10, scale = 2)
+    @Column(name = "total_revenue")
     private BigDecimal totalRevenue;
 
     @Column(name = "report_date")
@@ -53,12 +51,6 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
     private Users organizer;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "ticketapply_id")
-//    private TicketApply ticketapply;
-//
-
 
     //    update data before create data
     @PrePersist

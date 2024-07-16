@@ -1,106 +1,102 @@
 package com.ilevent.ilevent_backend.report.service.impl;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.report.entity.Report;
 import com.ilevent.ilevent_backend.ticketApply.repository.TicketApplyRepository;
 import com.ilevent.ilevent_backend.report.repository.ReportRepository;
 import com.ilevent.ilevent_backend.report.service.ReportService;
 import com.ilevent.ilevent_backend.users.entity.Users;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 
 @Service
 public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
-    private final TicketApplyRepository ticketApplyRepository;
 
-    public ReportServiceImpl(ReportRepository reportRepository, TicketApplyRepository ticketApplyRepository) {
+    public ReportServiceImpl(ReportRepository reportRepository) {
         this.reportRepository = reportRepository;
-        this.ticketApplyRepository = ticketApplyRepository;
     }
 
-//    @Override
-//    public void updateReportForEvent(Long eventId, Long organizerId) {
-//        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByEventId(eventId);
-//        if (totalAttendance == null) {
-//            totalAttendance = 0;
-//        }
-//
-//        Report report = reportRepository.findByEventIdAndOrganizerId(eventId, organizerId);
-//
-//        if (report == null) {
-//            report = new Report();
-//            Events event = new Events();
-//            event.setId(eventId);
-//            report.setEventId(event);
-//
-//            Users organizer = new Users();
-//            organizer.setId(organizerId);
-//            report.setOrganizer(organizer);
-//
-//            report.setCreatedAt(Instant.now());
-//            report.setReportDate(LocalDate.now());
-//        }
-//
-//        report.setAttendees(totalAttendance);
-//        report.setUpdatedAt(Instant.now());
-//
-//        reportRepository.save(report);
-//    }
+    private void checkIfOrganizer() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                boolean isOrganizer = userDetails.getAuthorities().stream()
+                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ORGANIZER"));
+                if (!isOrganizer) {
+                    throw new RuntimeException("User is not an organizer");
+                }
+            } else {
+                throw new RuntimeException("User details not found");
+            }
+        } else {
+            throw new RuntimeException("User is not authenticated");
+        }
+    }
 
     @Override
-    public Integer getTotalAttendanceForEvent(Long eventId) {
-        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByEventId(eventId);
-        if (totalAttendance == null) {
-            totalAttendance = 0;
-        }
+    public List<Report> getReportsForInterval(int minutes) {
 
-        Events event = new Events();
-        event.setId(eventId);
-        Report report = reportRepository.findByEventIdAndOrganizerId(event, null);
-        if (report == null) {
-            report = new Report();
-            report.setEventId(event);
-            report.setCreatedAt(Instant.now());
-            report.setReportDate(LocalDate.now());
-        }
-        report.setAttendees(totalAttendance);
-        report.setUpdatedAt(Instant.now());
-
-        reportRepository.save(report);
-
-        return totalAttendance;
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime startTime = endTime.minusMinutes(minutes);
+        return reportRepository.findReportsBetween(startTime, endTime);
     }
-//        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByEventId(eventId);
-//        return totalAttendance != null ? totalAttendance : 0;
-//    }
 
     @Override
-    public Integer getTotalAttendanceForOrganizer(Long organizerId) {
-        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByOrganizerId(organizerId);
-        if (totalAttendance == null) {
-            totalAttendance = 0;
-        }
-
-        Users organizer = new Users();
-        organizer.setId(organizerId);
-        Report report = reportRepository.findByEventIdAndOrganizerId(null, organizer);
-        if (report == null) {
-            report = new Report();
-            report.setOrganizer(organizer);
-            report.setCreatedAt(Instant.now());
-            report.setReportDate(LocalDate.now());
-        }
-        report.setAttendees(totalAttendance);
-        report.setUpdatedAt(Instant.now());
-
-        reportRepository.save(report);
-
-        return totalAttendance;
+    public List<Report> getDailyReports() {
+        return reportRepository.findDailyReports();
     }
-//        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByOrganizerId(organizerId);
-//        return totalAttendance != null ? totalAttendance : 0;
-//    }
+
+    @Override
+    public List<Report> getWeeklyReports() {
+        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).plusDays(1);
+        return reportRepository.findWeeklyReports(startDate, endDate);
+    }
+
+    @Override
+    public List<Report> getMonthlyReports() {
+        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).plusDays(1);
+        return reportRepository.findMonthlyReports(startDate, endDate);
+    }
 }
+//    @Override
+//    public List<Report> getReportsForInterval(int minutes) {
+//        LocalDateTime endTime = LocalDateTime.now();
+//        LocalDateTime startTime = endTime.minusMinutes(minutes);
+//        return reportRepository.findReportsBetween(startTime, endTime);
+//    }
+//
+//    @Override
+//    public List<Report> getDailyReports() {
+//        return reportRepository.findDailyReports();
+//    }
+//
+//    @Override
+//    public List<Report> getWeeklyReports() {
+//        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+//        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+//        return reportRepository.findWeeklyReports(startDate, endDate);
+//    }
+//
+//    @Override
+//    public List<Report> getMonthlyReports() {
+//        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+//        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).plusDays(1);
+//        return reportRepository.findMonthlyReports(startDate, endDate);
+//    }
+//}
