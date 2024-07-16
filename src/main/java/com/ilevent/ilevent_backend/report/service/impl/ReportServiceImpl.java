@@ -57,11 +57,11 @@ public class ReportServiceImpl implements ReportService {
             totalAttendance = 0;
         }
 
-        Report report = reportRepository.findByEventIdAndOrganizerId(eventId, null);
+        Events event = new Events();
+        event.setId(eventId);
+        Report report = reportRepository.findByEventIdAndOrganizerId(event, null);
         if (report == null) {
             report = new Report();
-            Events event = new Events();
-            event.setId(eventId);
             report.setEventId(event);
             report.setCreatedAt(Instant.now());
             report.setReportDate(LocalDate.now());
@@ -72,9 +72,10 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.save(report);
 
         return totalAttendance;
+    }
 //        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByEventId(eventId);
 //        return totalAttendance != null ? totalAttendance : 0;
-    }
+//    }
 
     @Override
     public Integer getTotalAttendanceForOrganizer(Long organizerId) {
@@ -83,11 +84,11 @@ public class ReportServiceImpl implements ReportService {
             totalAttendance = 0;
         }
 
-        Report report = reportRepository.findByEventIdAndOrganizerId(null, organizerId);
+        Users organizer = new Users();
+        organizer.setId(organizerId);
+        Report report = reportRepository.findByEventIdAndOrganizerId(null, organizer);
         if (report == null) {
             report = new Report();
-            Users organizer = new Users();
-            organizer.setId(organizerId);
             report.setOrganizer(organizer);
             report.setCreatedAt(Instant.now());
             report.setReportDate(LocalDate.now());
@@ -98,7 +99,8 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.save(report);
 
         return totalAttendance;
+    }
 //        Integer totalAttendance = ticketApplyRepository.getTotalAttendanceByOrganizerId(organizerId);
 //        return totalAttendance != null ? totalAttendance : 0;
-    }
+//    }
 }

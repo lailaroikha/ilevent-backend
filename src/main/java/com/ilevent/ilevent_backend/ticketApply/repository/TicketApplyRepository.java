@@ -18,6 +18,11 @@ public interface TicketApplyRepository extends JpaRepository<TicketApply, Long> 
     @Query("SELECT SUM(ta.quantity) FROM TicketApply ta WHERE ta.ticketId.eventId.id = :eventId")
     Integer getTotalAttendanceByEventId(@Param("eventId") Long eventId);
     //menghitung jumlah ticket yang terjual untuk setiap orginizer
-    @Query("SELECT SUM(ta.quantity) FROM TicketApply ta WHERE ta.ticketId.eventId.organizer.id = :organizerId")
+//    @Query("SELECT SUM(ta.quantity) FROM TicketApply ta WHERE ta.ticketId.eventId.organizer.id = :organizerId")
+//    Integer getTotalAttendanceByOrganizerId(@Param("organizerId") Long organizerId);
+    @Query("SELECT SUM(ta.quantity) FROM TicketApply ta " +
+            "JOIN ta.ticket t " +
+            "JOIN t.event e " +
+            "WHERE e.organizer.id = :organizerId")
     Integer getTotalAttendanceByOrganizerId(@Param("organizerId") Long organizerId);
 }
