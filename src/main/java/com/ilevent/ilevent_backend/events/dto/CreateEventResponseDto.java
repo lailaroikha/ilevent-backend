@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class CreateEventResponseDto {
+    private Long id;
     private Long organizerId;
     private String name;
     private String description;
@@ -40,7 +41,7 @@ public class CreateEventResponseDto {
 
     public static CreateEventResponseDto fromEntity(Events events){
         CreateEventResponseDto dto = new CreateEventResponseDto();
-
+        dto.setId(events.getId()); // Set event ID
         if (events.getOrganizer() != null) {
             dto.setOrganizerId(events.getOrganizer().getId());
             OrganizerDto organizerDto = new OrganizerDto();
