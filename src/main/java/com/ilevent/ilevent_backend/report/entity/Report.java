@@ -1,6 +1,8 @@
 package com.ilevent.ilevent_backend.report.entity;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.ticketApply.entity.TicketApply;
+import com.ilevent.ilevent_backend.transaction.entity.Transaction;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +26,7 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    private Events event;
+    private Events eventId;
 
     @ColumnDefault("0")
     @Column(name = "attendees")
@@ -52,4 +54,27 @@ public class Report {
     @JoinColumn(name = "organizer_id")
     private Users organizer;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "ticketapply_id")
+//    private TicketApply ticketapply;
+//
+
+
+    //    update data before create data
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
+
+    //    sebelum di remove
+    @PreRemove
+    protected void onDelete () {
+        deletedAt = Instant.now();
+    }
 }

@@ -42,4 +42,22 @@ public class TicketApply {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    //    update data before create data
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
+
+    //    sebelum di remove
+    @PreRemove
+    protected void onDelete () {
+        deletedAt = Instant.now();
+    }
+
 }
