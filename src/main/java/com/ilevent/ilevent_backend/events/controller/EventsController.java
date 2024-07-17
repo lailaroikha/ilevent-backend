@@ -9,9 +9,12 @@ import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.service.CloudinaryService;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.responses.Response;
+import com.ilevent.ilevent_backend.events.controller.EventsController;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,24 +23,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/events")
 @Validated
-@Log
 public class EventsController {
+    private static final Logger log = LoggerFactory.getLogger(EventsController.class);
+
     private final EventService eventService;
     private final CloudinaryService cloudinaryService;
+    private final ObjectMapper objectMapper;
 
-    public EventsController(EventService eventService, CloudinaryService cloudinaryService) {
+    public EventsController(EventService eventService, CloudinaryService cloudinaryService, ObjectMapper objectMapper) {
         this.eventService = eventService;
         this.cloudinaryService =cloudinaryService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping("/upload")
@@ -71,14 +77,35 @@ public class EventsController {
 
     @RolesAllowed("ROLE_ORGANIZER")
     @PostMapping("/create")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+    public ResponseEntity<?> createEvent(@RequestPart("eventImage") MultipartFile eventImage,
+                                         @RequestPart("data") String createEventRequestJson) {
+        try {
+            // Convert JSON string to CreateEventRequestDto
+            CreateEventRequestDto createEventRequestDto = objectMapper.readValue(createEventRequestJson, CreateEventRequestDto.class);
 
-        var claims = Claims.getClaimsFromJwt();
-        var email = (String) claims.get("sub");
-        log.info("Create event request received for user: " + email);
-        CreateEventResponseDto dto = eventService.createEvent(createEventRequestDto, email);
-        return Response.success("Event created successfully", dto);
+            var claims = Claims.getClaimsFromJwt();
+            var email = (String) claims.get("sub");
+            log.info("Create event request received for user: " + email);
+
+            CreateEventResponseDto dto = eventService.createEvent(createEventRequestDto, email, eventImage);
+            return Response.success("Event created successfully", dto);
+        } catch (IOException e) {
+            log.error("Error processing JSON: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body("Invalid JSON format");
+        } catch (Exception e) {
+            log.error("Error creating event: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating the event");
+        }
     }
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+//
+//        var claims = Claims.getClaimsFromJwt();
+//        var email = (String) claims.get("sub");
+//        log.info("Create event request received for user: " + email);
+//        CreateEventResponseDto dto = eventService.createEvent(createEventRequestDto, email);
+//        return Response.success("Event created successfully", dto);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getEventById(@PathVariable("id") Long id) {
