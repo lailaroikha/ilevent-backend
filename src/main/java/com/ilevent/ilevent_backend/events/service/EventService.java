@@ -12,25 +12,24 @@ import java.util.List;
 
 public interface EventService {
     CreateEventResponseDto createEvent(CreateEventRequestDto dto, String email, MultipartFile eventImage);
-//    List<CreateEventRequestDto> findByUser_Email(String email);
-
     Events updateEvent(Events event);
     CreateEventResponseDto getEventById(Long id);
     void deletedEvent(Long id);
-//    Page<Events> getAllEvents(Pageable pageable);
     Page<CreateEventResponseDto> getAllEvents(Pageable pageable);
-
     List<Events> getEventsByCategory(Events.CategoryType category);
-
     List<Events> getEventsByDate(LocalDate date);
-
     List<Events> getEventsByPrice(Boolean isFreeEvent);
-
     // Combine filters
     Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword, Pageable pageable);
-
     void deleteEvent(Long id);
-
     // Tambahkan metode searchEvents
     List<CreateEventResponseDto> searchEvents(String keyword);
+
+    // New methods for filtering upcoming and completed events
+    List<CreateEventResponseDto> getUpcomingEvents(Long UserId);
+    List<CreateEventResponseDto> getCompletedEvents(Long userId);
+//    List<CreateEventResponseDto> getUpcomingEvents();
+//    List<CreateEventResponseDto> getCompletedEvents();
+//    Page<CreateEventResponseDto> getUpcomingEvents(Pageable pageable);
+//    Page<CreateEventResponseDto> getCompletedEvents(Pageable pageable);
 }

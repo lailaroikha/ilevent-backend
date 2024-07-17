@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @RolesAllowed({"ROLE_PERSONAL", "ROLE_ORGANIZER"})
-    @PutMapping(value = "/profile", consumes = { "multipart/form-data" })
+    @PutMapping(value = "/profile/updated", consumes = { "multipart/form-data" })
     public ResponseEntity<?> updateProfile(@RequestPart("updateProfileDto") String updateProfileDtoString,
                                            @RequestPart("profilePicture") MultipartFile profilePicture) {
         try {

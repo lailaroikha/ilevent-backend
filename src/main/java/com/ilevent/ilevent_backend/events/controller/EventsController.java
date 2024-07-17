@@ -5,6 +5,7 @@ package com.ilevent.ilevent_backend.events.controller;
 import com.ilevent.ilevent_backend.auth.helper.Claims;
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
 import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
+import com.ilevent.ilevent_backend.events.dto.UpcomingCompletedResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.service.CloudinaryService;
 import com.ilevent.ilevent_backend.events.service.EventService;
@@ -28,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -141,4 +144,38 @@ public class EventsController {
     }
 
 
+    @RolesAllowed("ROLE_PERSONAL")
+    @GetMapping("/list")
+    public List<UpcomingCompletedResponseDto> getEvents(@RequestParam("type") String type) {
+        Map<String, Object> claims = Claims.getClaimsFromJwt();
+        Long userId = ((Number) claims.get("user_id")).longValue();
+        if (type.equalsIgnoreCase("upcoming")) {
+            return eventService.getUpcomingEvents(userId).stream()
+                    .map(this::convertToUpcomingCompletedResponseDto)
+                    .collect(Collectors.toList());
+        } else if (type.equalsIgnoreCase("completed")) {
+            return eventService.getCompletedEvents(userId).stream()
+                    .map(this::convertToUpcomingCompletedResponseDto)
+                    .collect(Collectors.toList());
+        } else {
+            throw new IllegalArgumentException("Invalid event type. Please use 'upcoming' or 'completed'.");
+        }
+    }
+
+    private UpcomingCompletedResponseDto convertToUpcomingCompletedResponseDto(CreateEventResponseDto event) {
+        UpcomingCompletedResponseDto responseDto = new UpcomingCompletedResponseDto();
+        responseDto.setId(event.getId());
+        responseDto.setOrganizerId(event.getOrganizerId());
+        responseDto.setName(event.getName());
+        responseDto.setDescription(event.getDescription());
+        responseDto.setLocation(event.getLocation());
+        responseDto.setDate(event.getDate());
+        responseDto.setTime(event.getTime());
+        responseDto.setImage(event.getImage());
+        responseDto.setIsFreeEvent(event.getIsFreeEvent());
+//        responseDto.setCategory(event.getCategory());
+//        responseDto.setEventCategoriesId(event.getRattingRate()); // Adjust this if needed
+        return responseDto;
+    }
 }
+

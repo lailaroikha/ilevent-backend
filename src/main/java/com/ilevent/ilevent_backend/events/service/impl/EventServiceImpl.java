@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +51,9 @@ public class EventServiceImpl implements EventService {
     private final PromoReferralRepository promoReferralRepository;
     private final Cloudinary cloudinary;
 
-    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, TicketService ticketService, VoucherRepository voucherRepository, TicketRepository ticketRepository, PromoReferralRepository promoReferralRepository, Cloudinary cloudinary){
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, TicketService ticketService, VoucherRepository voucherRepository, TicketRepository ticketRepository, PromoReferralRepository promoReferralRepository, Cloudinary cloudinary) {
         this.eventRepository = eventRepository;
-        this.userRepository=userRepository;
+        this.userRepository = userRepository;
         this.ticketService = ticketService;
         this.voucherRepository = voucherRepository;
         this.ticketRepository = ticketRepository;
@@ -194,7 +195,7 @@ public class EventServiceImpl implements EventService {
             existingEvent.setDescription(event.getDescription());
             existingEvent.setDate(event.getDate());
             return eventRepository.save(existingEvent);
-        }    else {
+        } else {
             throw new RuntimeException("Event not found with id" + event.getId());
         }
     }
@@ -249,8 +250,10 @@ public class EventServiceImpl implements EventService {
         return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
     }
 
+
+
     @Override
-    public Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword,  Pageable pageable) {
+    public Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword, Pageable pageable) {
         log.info("Filtering events with parameters - category: {}, date: {}, isFreeEvent: {}, location: {}, keyword");
 
         Specification<Events> spec = new Specification<Events>() {
@@ -284,5 +287,37 @@ public class EventServiceImpl implements EventService {
         log.info("Found {} events");
 
         return eventsPage.map(CreateEventResponseDto::fromEntity);
+    }
+    @Override
+    public List<CreateEventResponseDto> getUpcomingEvents(Long userId) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Events> events = eventRepository.findUpcomingEventsByUser(userId, now.toLocalDate(), now.toLocalTime());
+        return events.stream()
+                .map(this::convertToCreateEventResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CreateEventResponseDto> getCompletedEvents(Long userId) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Events> events = eventRepository.findCompletedEventsByUser(userId, now.toLocalDate(), now.toLocalTime());
+        return events.stream()
+                .map(this::convertToCreateEventResponseDto)
+                .collect(Collectors.toList());
+    }
+    private CreateEventResponseDto convertToCreateEventResponseDto(Events event) {
+        CreateEventResponseDto responseDto = new CreateEventResponseDto();
+        responseDto.setId(event.getId());
+        responseDto.setOrganizerId(event.getOrganizer().getId());
+        responseDto.setName(event.getName());
+        responseDto.setDescription(event.getDescription());
+        responseDto.setDate(event.getDate().toString());
+        responseDto.setTime(event.getTime().toString());
+        responseDto.setLocation(event.getLocation());
+        responseDto.setImage(event.getImage());
+        responseDto.setIsFreeEvent(event.getIsFreeEvent());
+//        responseDto.setCategory(event.getCategory());
+//        responseDto.setRattingRate(event.getRattingRate());
+        return responseDto;
     }
 }

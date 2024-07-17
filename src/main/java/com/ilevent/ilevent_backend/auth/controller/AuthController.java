@@ -56,8 +56,10 @@ public class AuthController {
         response.setToken(token);
 
         Cookie cookie = new Cookie("sid", token);
+        cookie.setMaxAge(21600);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
+        headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=" + cookie.getPath() + "; HttpOnly; Max-Age=" + cookie.getMaxAge());
+//        headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly", );
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
     }
 

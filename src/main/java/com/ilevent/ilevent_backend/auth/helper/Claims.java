@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.Map;
 
+
 public class Claims {
     public static Map<String, Object> getClaimsFromJwt() {
         SecurityContext context = SecurityContextHolder.getContext();
