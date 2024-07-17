@@ -2,7 +2,6 @@ package com.ilevent.ilevent_backend.auth.service.impl;
 
 //import com.ilevent.ilevent_backend.auth.repository.AuthRedisRepository;
 import com.ilevent.ilevent_backend.auth.service.AuthService;
-import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import lombok.extern.java.Log;
 import org.springframework.security.core.Authentication;

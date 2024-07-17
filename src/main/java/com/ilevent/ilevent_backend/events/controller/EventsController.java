@@ -9,39 +9,55 @@ import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.events.service.CloudinaryService;
 import com.ilevent.ilevent_backend.events.service.EventService;
 import com.ilevent.ilevent_backend.responses.Response;
+import com.ilevent.ilevent_backend.events.controller.EventsController;
+import com.ilevent.ilevent_backend.users.entity.Users;
+import com.ilevent.ilevent_backend.users.repository.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/events")
 @Validated
-@Log
 public class EventsController {
+    private static final Logger log = LoggerFactory.getLogger(EventsController.class);
+
     private final EventService eventService;
     private final CloudinaryService cloudinaryService;
+    private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
 
-    public EventsController(EventService eventService, CloudinaryService cloudinaryService) {
+    public EventsController(EventService eventService, CloudinaryService cloudinaryService, ObjectMapper objectMapper, UserRepository userRepository) {
         this.eventService = eventService;
-        this.cloudinaryService =cloudinaryService;
+        this.cloudinaryService = cloudinaryService;
+        this.objectMapper = objectMapper;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImages(@RequestParam("file")MultipartFile file) {
+    public ResponseEntity<String> uploadImages(@RequestParam("file") MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is missing");
         }
@@ -71,14 +87,35 @@ public class EventsController {
 
     @RolesAllowed("ROLE_ORGANIZER")
     @PostMapping("/create")
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+    public ResponseEntity<?> createEvent(@RequestPart("eventImage") MultipartFile eventImage,
+                                         @RequestPart("data") String createEventRequestJson) {
+        try {
+            // Convert JSON string to CreateEventRequestDto
+            CreateEventRequestDto createEventRequestDto = objectMapper.readValue(createEventRequestJson, CreateEventRequestDto.class);
 
-        var claims = Claims.getClaimsFromJwt();
-        var email = (String) claims.get("sub");
-        log.info("Create event request received for user: " + email);
-        CreateEventResponseDto dto = eventService.createEvent(createEventRequestDto, email);
-        return Response.success("Event created successfully", dto);
+            var claims = Claims.getClaimsFromJwt();
+            var email = (String) claims.get("sub");
+            log.info("Create event request received for user: " + email);
+
+            CreateEventResponseDto dto = eventService.createEvent(createEventRequestDto, email, eventImage);
+            return Response.success("Event created successfully", dto);
+        } catch (IOException e) {
+            log.error("Error processing JSON: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body("Invalid JSON format");
+        } catch (Exception e) {
+            log.error("Error creating event: " + e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while creating the event");
+        }
     }
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+//
+//        var claims = Claims.getClaimsFromJwt();
+//        var email = (String) claims.get("sub");
+//        log.info("Create event request received for user: " + email);
+//        CreateEventResponseDto dto = eventService.createEvent(createEventRequestDto, email);
+//        return Response.success("Event created successfully", dto);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getEventById(@PathVariable("id") Long id) {
@@ -112,6 +149,5 @@ public class EventsController {
         List<CreateEventResponseDto> events = eventService.searchEvents(keyword);
         return Response.success("Search results retrieved successfully", events);
     }
-
 
 }

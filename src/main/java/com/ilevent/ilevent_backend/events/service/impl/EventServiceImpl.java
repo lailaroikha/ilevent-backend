@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.events.service.impl;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.ilevent.ilevent_backend.events.dto.CreateEventRequestDto;
 import com.ilevent.ilevent_backend.events.dto.CreateEventResponseDto;
 import com.ilevent.ilevent_backend.events.entity.Events;
@@ -23,11 +24,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.cloudinary.Cloudinary;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -43,14 +49,16 @@ public class EventServiceImpl implements EventService {
     private final VoucherRepository voucherRepository;
     private final TicketRepository ticketRepository;
     private final PromoReferralRepository promoReferralRepository;
+    private final Cloudinary cloudinary;
 
-    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, TicketService ticketService, VoucherRepository voucherRepository, TicketRepository ticketRepository, PromoReferralRepository promoReferralRepository){
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, TicketService ticketService, VoucherRepository voucherRepository, TicketRepository ticketRepository, PromoReferralRepository promoReferralRepository, Cloudinary cloudinary) {
         this.eventRepository = eventRepository;
-        this.userRepository=userRepository;
+        this.userRepository = userRepository;
         this.ticketService = ticketService;
         this.voucherRepository = voucherRepository;
         this.ticketRepository = ticketRepository;
         this.promoReferralRepository = promoReferralRepository;
+        this.cloudinary = cloudinary;
     }
 
     @Override
@@ -61,7 +69,7 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public CreateEventResponseDto createEvent(CreateEventRequestDto dto, String email) {
+    public CreateEventResponseDto createEvent(CreateEventRequestDto dto, String email, MultipartFile eventImage) {
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         log.info("User found: " + user.getEmail() + ", Is Organizer: " + user.getOrganizer());
@@ -84,7 +92,24 @@ public class EventServiceImpl implements EventService {
         events.setOrganizer(user);
         events.setLocation(dto.getLocation());
 //        events.setIsFreeEvent(dto.getIsFreeEvent());
-        events.setImage(dto.getImage());
+        // Upload image to Cloudinary
+        // Upload image to Cloudinary
+        if (eventImage != null && !eventImage.isEmpty()) {
+            try {
+                Map<String, Object> uploadResult = cloudinary.uploader().upload(
+                        eventImage.getBytes(),
+                        ObjectUtils.asMap("folder", "event_images")
+                );
+                String imageUrl = (String) uploadResult.get("url");
+                events.setImage(imageUrl);
+            } catch (IOException e) {
+                log.error("Error uploading image to Cloudinary", e);
+                throw new RuntimeException("Failed to upload image");
+            }
+        } else {
+            // If no image is uploaded, set the image URL from the DTO
+            events.setImage(dto.getImage());
+        }
         events.setCategory(dto.getCategory());
 //        eventRepository.save(events);
         Events savedEvent = eventRepository.save(events);
@@ -170,7 +195,7 @@ public class EventServiceImpl implements EventService {
             existingEvent.setDescription(event.getDescription());
             existingEvent.setDate(event.getDate());
             return eventRepository.save(existingEvent);
-        }    else {
+        } else {
             throw new RuntimeException("Event not found with id" + event.getId());
         }
     }
@@ -225,8 +250,10 @@ public class EventServiceImpl implements EventService {
         return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
     }
 
+
+
     @Override
-    public Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword,  Pageable pageable) {
+    public Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword, Pageable pageable) {
         log.info("Filtering events with parameters - category: {}, date: {}, isFreeEvent: {}, location: {}, keyword");
 
         Specification<Events> spec = new Specification<Events>() {
@@ -246,14 +273,6 @@ public class EventServiceImpl implements EventService {
                 if (location != null && !location.isEmpty()) {
                     predicates.add(cb.like(cb.lower(root.get("location")), "%" + location.toLowerCase() + "%"));
                 }
-//                if (availableSeats != null) {
-//                    Subquery<Long> ticketSubquery = query.subquery(Long.class);
-//                    Root<Events> subRoot = ticketSubquery.from(Events.class);
-//                    Join<Object, Object> ticketJoin = subRoot.join("tickets");
-//                    ticketSubquery.select(cb.sum(ticketJoin.get("availableSeats")));
-//                    ticketSubquery.where(cb.equal(subRoot.get("id"), root.get("id")));
-//                    predicates.add(cb.greaterThanOrEqualTo(totalAvailableSeats, availableSeats));
-//                }
                 if (keyword != null && !keyword.isEmpty()) {
                     String keywordPattern = "%" + keyword.toLowerCase() + "%";
                     Predicate namePredicate = cb.like(cb.lower(root.get("name")), keywordPattern);
@@ -268,11 +287,37 @@ public class EventServiceImpl implements EventService {
         log.info("Found {} events");
 
         return eventsPage.map(CreateEventResponseDto::fromEntity);
-//        List<Events> events = eventRepository.findAll(spec);
-//        log.info("Found {} events");
-//
-//        return events.stream().map(CreateEventResponseDto::fromEntity).collect(Collectors.toList());
     }
-
-
+//    @Override
+//    public List<CreateEventResponseDto> getUpcomingEvents(Long userId) {
+//        LocalDateTime now = LocalDateTime.now();
+//        List<Events> events = eventRepository.findUpcomingEventsByUser(userId, now.toLocalDate(), now.toLocalTime());
+//        return events.stream()
+//                .map(this::convertToCreateEventResponseDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public List<CreateEventResponseDto> getCompletedEvents(Long userId) {
+//        LocalDateTime now = LocalDateTime.now();
+//        List<Events> events = eventRepository.findCompletedEventsByUser(userId, now.toLocalDate(), now.toLocalTime());
+//        return events.stream()
+//                .map(this::convertToCreateEventResponseDto)
+//                .collect(Collectors.toList());
+//    }
+//    private CreateEventResponseDto convertToCreateEventResponseDto(Events event) {
+//        CreateEventResponseDto responseDto = new CreateEventResponseDto();
+//        responseDto.setId(event.getId());
+//        responseDto.setOrganizerId(event.getOrganizer().getId());
+//        responseDto.setName(event.getName());
+//        responseDto.setDescription(event.getDescription());
+//        responseDto.setDate(event.getDate().toString());
+//        responseDto.setTime(event.getTime().toString());
+//        responseDto.setLocation(event.getLocation());
+//        responseDto.setImage(event.getImage());
+//        responseDto.setIsFreeEvent(event.getIsFreeEvent());
+////        responseDto.setCategory(event.getCategory());
+////        responseDto.setRattingRate(event.getRattingRate());
+//        return responseDto;
+//    }
 }
