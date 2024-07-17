@@ -25,11 +25,4 @@ public interface EventService {
     // Tambahkan metode searchEvents
     List<CreateEventResponseDto> searchEvents(String keyword);
 
-    // New methods for filtering upcoming and completed events
-    List<CreateEventResponseDto> getUpcomingEvents(Long UserId);
-    List<CreateEventResponseDto> getCompletedEvents(Long userId);
-//    List<CreateEventResponseDto> getUpcomingEvents();
-//    List<CreateEventResponseDto> getCompletedEvents();
-//    Page<CreateEventResponseDto> getUpcomingEvents(Pageable pageable);
-//    Page<CreateEventResponseDto> getCompletedEvents(Pageable pageable);
 }
