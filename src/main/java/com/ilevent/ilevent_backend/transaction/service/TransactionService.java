@@ -7,6 +7,6 @@ import com.ilevent.ilevent_backend.transaction.dto.TransactionResponseDto;
 import com.ilevent.ilevent_backend.transaction.entity.Transaction;
 
 public interface TransactionService {
-    PriceCalculationResponseDto calculatePrice(PriceCalculationRequestDto priceCalculationRequestDto);
-    TransactionResponseDto submitTransaction(TransactionRequestDto transactionRequestDto);
+    PriceCalculationResponseDto calculatePrice(PriceCalculationRequestDto priceCalculationRequestDto, String email);
+    TransactionResponseDto submitTransaction(TransactionRequestDto transactionRequestDto, String email);
 }

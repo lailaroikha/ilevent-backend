@@ -16,4 +16,5 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     @Query("SELECT t FROM Transaction t WHERE t.event.organizer = :organizer AND t.transactionDate BETWEEN :periodStart AND :periodEnd")
     List<Transaction> findAllByOrganizerAndTransactionDateBetween(@Param("organizer") Users organizer, @Param("periodStart") LocalDate periodStart, @Param("periodEnd") LocalDate periodEnd);
+
 }

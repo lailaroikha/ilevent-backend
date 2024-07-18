@@ -69,6 +69,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/auth/login").permitAll();
                     auth.requestMatchers("/api/v1/users/register").permitAll();
                     auth.requestMatchers("/api/promo-referrals/create").hasAuthority("ROLE_ORGANIZER");
+                    auth.requestMatchers("api/v1/purchased/purchased").hasAuthority("ROLE_PERSONAL");
                     auth.requestMatchers("/api/v1/events/{id}").permitAll();
                     auth.requestMatchers("/api/v1/events").permitAll();
                     auth.requestMatchers("/api/v1/events/filter/**").permitAll();

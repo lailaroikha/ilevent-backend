@@ -1,5 +1,6 @@
 package com.ilevent.ilevent_backend.transaction.service.impl;
 
+import com.ilevent.ilevent_backend.auth.helper.Claims;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
 import com.ilevent.ilevent_backend.priceCalculation.dto.PriceCalculationRequestDto;
 import com.ilevent.ilevent_backend.priceCalculation.dto.PriceCalculationResponseDto;
@@ -22,8 +23,13 @@ import com.ilevent.ilevent_backend.voucher.entity.Voucher;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.voucherApply.entity.VoucherApply;
 import com.ilevent.ilevent_backend.voucherApply.repository.VoucherApplyRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import com.ilevent.ilevent_backend.ticketApply.dto.TicketApplyRequestDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -51,10 +57,17 @@ public class TransactionServiceImpl implements TransactionService {
         this.ticketApplyRepository = ticketApplyRepository;
         this.voucherApplyRepository = voucherApplyRepository;
     }
-
     @Override
-    public PriceCalculationResponseDto calculatePrice(PriceCalculationRequestDto priceCalculationRequestDto) {
-        // Menghitung jumlah total untuk tiket
+    @Transactional
+    public PriceCalculationResponseDto calculatePrice(PriceCalculationRequestDto priceCalculationRequestDto, String email) {
+        // Find the user in the database
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (Boolean.TRUE.equals(user.getOrganizer())) {
+            throw new IllegalArgumentException("Organizers cannot calculate price");
+        }
+
         BigDecimal totalAmount = priceCalculationRequestDto.getTickets().stream()
                 .map(ticketDto -> {
                     Ticket ticket = ticketRepository.findById(ticketDto.getTicketId())
@@ -63,7 +76,6 @@ public class TransactionServiceImpl implements TransactionService {
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Mengurangi jumlah dengan diskon voucher
         BigDecimal amountAfterDiscount = totalAmount;
         if (priceCalculationRequestDto.getVouchers() != null) {
             for (VoucherApplyRequestDto voucherDto : priceCalculationRequestDto.getVouchers()) {
@@ -74,7 +86,6 @@ public class TransactionServiceImpl implements TransactionService {
             }
         }
 
-        // Mengurangi jumlah dengan diskon promo referral
         if (priceCalculationRequestDto.getPromoReferralId() != null) {
             PromoReferral promoReferral = promoReferralRepository.findById(priceCalculationRequestDto.getPromoReferralId())
                     .orElseThrow(() -> new RuntimeException("PromoReferral not found"));
@@ -82,9 +93,6 @@ public class TransactionServiceImpl implements TransactionService {
             amountAfterDiscount = amountAfterDiscount.subtract(discount);
         }
 
-        // Mengurangi jumlah dengan diskon poin (maksimal 50% dari harga setelah diskon)
-        Users user = userRepository.findById(priceCalculationRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
         BigDecimal pointsDiscount = BigDecimal.ZERO;
         if (user.getTotalPoints() > 0) {
             BigDecimal maxPointsDiscount = amountAfterDiscount.multiply(BigDecimal.valueOf(0.50));
@@ -92,99 +100,89 @@ public class TransactionServiceImpl implements TransactionService {
             pointsDiscount = pointsToUse.min(maxPointsDiscount);
             amountAfterDiscount = amountAfterDiscount.subtract(pointsDiscount);
 
-            // Mengurangi poin pengguna
-            int pointsUsed = pointsDiscount.intValue(); // 1 poin = 1 unit mata uang
+            int pointsUsed = pointsDiscount.intValue();
             user.setTotalPoints(user.getTotalPoints() - pointsUsed);
             userRepository.save(user);
         }
 
-        // Menyiapkan respons
         PriceCalculationResponseDto responseDto = new PriceCalculationResponseDto();
-        responseDto.setTotalAmount(totalAmount.doubleValue()); // Mengonversi kembali ke Double
-        responseDto.setAmountAfterDiscount(amountAfterDiscount.doubleValue()); // Mengonversi kembali ke Double
-        responseDto.setPointsDiscount(pointsDiscount.doubleValue()); // Mengonversi kembali ke Double
+        responseDto.setTotalAmount(totalAmount.doubleValue());
+        responseDto.setAmountAfterDiscount(amountAfterDiscount.doubleValue());
+        responseDto.setPointsDiscount(pointsDiscount.doubleValue());
 
         return responseDto;
-
     }
 
     @Override
-    public TransactionResponseDto submitTransaction(TransactionRequestDto transactionRequestDto) {
-        // Buat permintaan perhitungan harga
+    @Transactional
+    public TransactionResponseDto submitTransaction(TransactionRequestDto transactionRequestDto, String email) {
+        Users user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (Boolean.TRUE.equals(user.getOrganizer())) {
+            throw new IllegalArgumentException("Organizers cannot make transactions");
+        }
+
         PriceCalculationRequestDto priceCalculationRequestDto = new PriceCalculationRequestDto();
-        priceCalculationRequestDto.setUserId(transactionRequestDto.getUserId());
+        priceCalculationRequestDto.setUserId(user.getId());
         priceCalculationRequestDto.setTickets(transactionRequestDto.getTickets());
         priceCalculationRequestDto.setVouchers(transactionRequestDto.getVouchers());
         priceCalculationRequestDto.setPromoReferralId(transactionRequestDto.getPromoReferralId());
 
-        // Panggil calculatePrice untuk menghitung harga
-        PriceCalculationResponseDto priceCalculationResponseDto = calculatePrice(priceCalculationRequestDto);
+        PriceCalculationResponseDto priceCalculationResponseDto = calculatePrice(priceCalculationRequestDto, email);
 
-
-        // Temukan pengguna dan event
-        Users user = userRepository.findById(transactionRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
         Events event = eventRepository.findById(transactionRequestDto.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
-        // Buat entitas transaksi baru
         Transaction transaction = new Transaction();
         transaction.setUser(user);
         transaction.setEvent(event);
         transaction.setTransactionDate(LocalDate.now());
-        transaction.setAmount(BigDecimal.valueOf(priceCalculationResponseDto.getAmountAfterDiscount())); // Gunakan hasil perhitungan
+        transaction.setAmount(BigDecimal.valueOf(priceCalculationResponseDto.getAmountAfterDiscount()));
         transaction.setPaymentStatus("sukses");
         transaction.setCreatedAt(Instant.now());
         transaction.setUpdatedAt(Instant.now());
 
-        // Simpan transaksi
         Transaction savedTransaction = transactionRepository.save(transaction);
 
-        // Update jumlah tiket yang tersedia
         for (TicketApplyRequestDto ticketDto : transactionRequestDto.getTickets()) {
             Ticket ticket = ticketRepository.findById(ticketDto.getTicketId())
                     .orElseThrow(() -> new RuntimeException("Ticket not found"));
             ticket.setAvailableSeats(ticket.getAvailableSeats() - ticketDto.getQuantity());
             ticketRepository.save(ticket);
 
-            //save to ticketapply
             TicketApply ticketApply = new TicketApply();
             ticketApply.setTransactionId(savedTransaction);
             ticketApply.setTicketId(ticket);
             ticketApply.setQuantity(ticketDto.getQuantity());
-            ticketApply.setCreatedAt(Instant.now()); // Set createdAt
-            ticketApply.setUpdatedAt(Instant.now()); // Set updatedAt
+            ticketApply.setCreatedAt(Instant.now());
+            ticketApply.setUpdatedAt(Instant.now());
             ticketApplyRepository.save(ticketApply);
         }
 
-        // Update jumlah voucher yang tersedia
         if (transactionRequestDto.getVouchers() != null) {
             for (VoucherApplyRequestDto voucherDto : transactionRequestDto.getVouchers()) {
                 Voucher voucher = voucherRepository.findById(voucherDto.getVoucherId())
                         .orElseThrow(() -> new RuntimeException("Voucher not found"));
-                voucher.setMaxUses(voucher.getMaxUses() - voucherDto.getQuantity());
+                voucher.setMaxUses(voucher.getMaxUses() - 1);
                 voucherRepository.save(voucher);
 
-                //save to voucherapply
                 VoucherApply voucherApply = new VoucherApply();
                 voucherApply.setTransactionId(savedTransaction);
                 voucherApply.setVoucherId(voucher);
-                voucherApply.setQuantity(voucherDto.getQuantity());
-                voucherApply.setCreatedAt(Instant.now()); // Set createdAt
-                voucherApply.setUpdatedAt(Instant.now()); // Set updatedAt
+                voucherApply.setQuantity(1);
+                voucherApply.setCreatedAt(Instant.now());
+                voucherApply.setUpdatedAt(Instant.now());
                 voucherApplyRepository.save(voucherApply);
             }
         }
 
-        // Set detail transaksi dalam response DTO
         TransactionResponseDto responseDto = new TransactionResponseDto();
         responseDto.setTransactionId(savedTransaction.getId());
-        responseDto.setTotalAmount(priceCalculationResponseDto.getTotalAmount()); // Gunakan hasil perhitungan
-        responseDto.setAmountAfterDiscount(priceCalculationResponseDto.getAmountAfterDiscount()); // Gunakan hasil perhitungan
-        responseDto.setPointsDiscount(priceCalculationResponseDto.getPointsDiscount()); // Gunakan hasil perhitungan
+        responseDto.setTotalAmount(priceCalculationResponseDto.getTotalAmount());
+        responseDto.setAmountAfterDiscount(priceCalculationResponseDto.getAmountAfterDiscount());
+        responseDto.setPointsDiscount(priceCalculationResponseDto.getPointsDiscount());
         responseDto.setPaymentStatus(transaction.getPaymentStatus());
 
         return responseDto;
     }
 }
-

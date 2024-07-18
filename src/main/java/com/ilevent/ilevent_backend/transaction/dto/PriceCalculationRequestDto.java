@@ -7,11 +7,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TransactionRequestDto {
-    private Long eventId;
+public class PriceCalculationRequestDto {
+    private Long userId;
     private List<TicketApplyRequestDto> tickets;
     private List<VoucherApplyRequestDto> vouchers;
     private Long promoReferralId;
-//    private Double amountAfterDiscount;
-    private Double pointsDiscount;
 }
