@@ -4,6 +4,8 @@ import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.purchasedTickets.dto.PurchasedTicketsResponseDto;
 import com.ilevent.ilevent_backend.purchasedTickets.repository.PurchasedTicketRepository;
 import com.ilevent.ilevent_backend.purchasedTickets.service.PurchasedTicketService;
+import com.ilevent.ilevent_backend.reviews.dto.ReviewResponseDto;
+import com.ilevent.ilevent_backend.reviews.repository.ReviewRepository;
 import com.ilevent.ilevent_backend.ticketApply.entity.TicketApply;
 import com.ilevent.ilevent_backend.users.entity.Users;
 import com.ilevent.ilevent_backend.users.repository.UserRepository;
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class PurchasedTicketServiceImpl implements PurchasedTicketService {
     private final PurchasedTicketRepository purchasedTicketsRepository;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
-    public PurchasedTicketServiceImpl(PurchasedTicketRepository purchasedTicketsRepository, UserRepository userRepository) {
+    public PurchasedTicketServiceImpl(PurchasedTicketRepository purchasedTicketsRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
         this.purchasedTicketsRepository = purchasedTicketsRepository;
         this.userRepository = userRepository;
+        this.reviewRepository = reviewRepository;
     }
 
 
@@ -68,6 +72,11 @@ public class PurchasedTicketServiceImpl implements PurchasedTicketService {
         organizerDto.setName(event.getOrganizer().getName());
         organizerDto.setUsername(event.getOrganizer().getUsername());
         dto.setOrganizer(organizerDto);
+
+        List<ReviewResponseDto> reviews = reviewRepository.findByEvent(event).stream()
+                .map(ReviewResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        dto.setReviews(reviews);
 
         return dto;
     }

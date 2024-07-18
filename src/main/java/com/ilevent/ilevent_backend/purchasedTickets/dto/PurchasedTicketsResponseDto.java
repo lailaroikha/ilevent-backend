@@ -2,6 +2,7 @@ package com.ilevent.ilevent_backend.purchasedTickets.dto;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.promoReferral.dto.PromoReferralResponseDto;
+import com.ilevent.ilevent_backend.reviews.dto.ReviewResponseDto;
 import com.ilevent.ilevent_backend.ticket.dto.TicketResponseDto;
 import com.ilevent.ilevent_backend.voucher.dto.VoucherResponseDto;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class PurchasedTicketsResponseDto {
     private Integer eventCategoriesId;
     private Events.CategoryType category;
     private OrganizerDto organizer;
+    private List<ReviewResponseDto> reviews;
 
 
     @Data

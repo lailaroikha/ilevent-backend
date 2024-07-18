@@ -1,6 +1,7 @@
 package com.ilevent.ilevent_backend.reviews.entity;
 
 import com.ilevent.ilevent_backend.events.entity.Events;
+import com.ilevent.ilevent_backend.users.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -40,5 +41,9 @@ public class Reviews {
     @NotNull
     @Column(name = "update_at", nullable = false)
     private Instant updateAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Users user;
 
 }

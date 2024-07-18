@@ -13,6 +13,7 @@ public class ReviewResponseDto {
     private String review;
     private Instant createdAt;
     private Instant updatedAt;
+    private Long userId;
 
     public static ReviewResponseDto fromEntity(Reviews reviews) {
         ReviewResponseDto dto = new ReviewResponseDto();
@@ -22,6 +23,12 @@ public class ReviewResponseDto {
         dto.setReview(reviews.getReview());
         dto.setCreatedAt(reviews.getCreatedAt());
         dto.setUpdatedAt(reviews.getUpdateAt());
+        // Menambahkan validasi untuk menangani null
+        if (reviews.getUser() != null) {
+            dto.setUserId(reviews.getUser().getId());
+        } else {
+            dto.setUserId(null);
+        }
         return dto;
     }
 }
