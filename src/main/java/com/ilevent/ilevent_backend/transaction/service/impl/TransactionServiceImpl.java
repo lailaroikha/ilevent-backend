@@ -82,6 +82,10 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         if (priceCalculationRequestDto.getPromoReferralId() != null) {
+            // Pastikan pengguna mendaftar dengan referral dan belum menggunakan promo referral sebelumnya
+            if (Boolean.TRUE.equals(user.getPromoReferralUsed())) {
+                throw new IllegalArgumentException("Promo referral has already been used");
+            }
             PromoReferral promoReferral = promoReferralRepository.findById(priceCalculationRequestDto.getPromoReferralId())
                     .orElseThrow(() -> new RuntimeException("PromoReferral not found"));
             BigDecimal discount = totalAmount.multiply(BigDecimal.valueOf(promoReferral.getPromoValueDiscount()).divide(BigDecimal.valueOf(100)));
@@ -134,6 +138,13 @@ public class TransactionServiceImpl implements TransactionService {
             user.setTotalPoints(user.getTotalPoints() - pointsUsed);
             userRepository.save(user);
         }
+
+        // Tandai promo referral sebagai telah digunakan jika promoReferralId tidak null
+        if (transactionRequestDto.getPromoReferralId() != null) {
+            user.setPromoReferralUsed(true);
+        }
+
+        userRepository.save(user);
 
         Events event = eventRepository.findById(transactionRequestDto.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));

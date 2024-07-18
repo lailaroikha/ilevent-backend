@@ -76,6 +76,9 @@ public class Users {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @Column(name = "promo_referral_used")
+    private Boolean promoReferralUsed=false;
+
     //    update data before create data
     @PrePersist
     protected void onCreate() {
@@ -93,6 +96,7 @@ public class Users {
     protected void onDelete () {
         deletedAt = Instant.now();
     }
+
 
     public boolean isOrganizer() {
         return false;

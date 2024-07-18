@@ -56,24 +56,50 @@ public class UserServiceImpl implements UserService {
         String referralCode = generateReferralCode(newUser.getName());
         newUser.setReferralCode(referralCode);
 
-        Users savedUser = userRepository.save(newUser);
-        if (registerRequestDto.getReferralCode() != null) {
-            Users referrer = userRepository.findByReferralCode(registerRequestDto.getReferralCode())
-                    .orElseThrow(() -> new ApplicationException("Referral code not found"));
-            if (referrer != null) {
-                Referral referral = new Referral();
-                referral.setUser(savedUser);
-                referral.setReferredUserId(referrer);
-                Instant now = Instant.now();
-                referral.setCreatedAt(now);
-                referral.setUpdatedAt(now);
-                referralRepository.save(referral);
+//        Users savedUser = userRepository.save(newUser);
+//        if (registerRequestDto.getReferralCode() != null) {
+//            Users referrer = userRepository.findByReferralCode(registerRequestDto.getReferralCode())
+//                    .orElseThrow(() -> new ApplicationException("Referral code not found"));
+//            if (referrer != null) {
+//                Referral referral = new Referral();
+//                referral.setUser(savedUser);
+//                referral.setReferredUserId(referrer);
+//                Instant now = Instant.now();
+//                referral.setCreatedAt(now);
+//                referral.setUpdatedAt(now);
+//                referralRepository.save(referral);
 
                 //Add points to the referring user
-                pointHistoryService.addPointsHistory(referrer.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
-            }
+//                pointHistoryService.addPointsHistory(referrer.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
+//            }
+//
+//        }
+//        return RegisterResponseDto.fromEntity(savedUser);
+//    }
+        // Check if referral code is provided
+        if (registerRequestDto.getReferralCode() != null && !registerRequestDto.getReferralCode().isEmpty()) {
+            Users referrer = userRepository.findByReferralCode(registerRequestDto.getReferralCode())
+                    .orElseThrow(() -> new ApplicationException("Referral code not found"));
+            Referral referral = new Referral();
+            referral.setUser(referrer);
+            referral.setReferredUserId(newUser);
+            Instant now = Instant.now();
+            referral.setCreatedAt(now);
+            referral.setUpdatedAt(now);
+            referralRepository.save(referral);
 
+            // Add points to the referring user
+            pointHistoryService.addPointsHistory(referrer.getId(), 10000, "REFERRAL", LocalDate.now().plusMonths(3));
+
+            // Set promoReferralUsed to false if the user registered with a referral code
+            newUser.setPromoReferralUsed(false);
+        } else {
+            // Set promoReferralUsed to true if no referral code is provided
+            newUser.setPromoReferralUsed(true);
         }
+
+        Users savedUser = userRepository.save(newUser);
+
         return RegisterResponseDto.fromEntity(savedUser);
     }
 

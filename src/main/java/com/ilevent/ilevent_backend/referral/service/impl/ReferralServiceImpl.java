@@ -64,8 +64,15 @@ public class ReferralServiceImpl implements ReferralService {
             promoReferral.setUpdateAt(Instant.now());
             promoReferralRepository.save(promoReferral);
 
+            // Set referredBy for newUser
+            newUser.setPromoReferralUsed(false); // Ensure promoReferralUsed is false for referred users
+            userRepository.save(newUser);
+
             return "Referral code applied successfully";
         } else {
+            // Set promoReferralUsed to true if no referral code is provided
+            newUser.setPromoReferralUsed(true);
+            userRepository.save(newUser);
             return "No referral code provided";
         }
     }
