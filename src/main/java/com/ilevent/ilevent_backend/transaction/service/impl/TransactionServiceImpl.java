@@ -1,9 +1,6 @@
 package com.ilevent.ilevent_backend.transaction.service.impl;
 
-import com.ilevent.ilevent_backend.auth.helper.Claims;
 import com.ilevent.ilevent_backend.events.repository.EventRepository;
-import com.ilevent.ilevent_backend.priceCalculation.dto.PriceCalculationRequestDto;
-import com.ilevent.ilevent_backend.priceCalculation.dto.PriceCalculationResponseDto;
 import com.ilevent.ilevent_backend.promoReferral.entity.PromoReferral;
 import com.ilevent.ilevent_backend.promoReferral.repository.PromoReferralRepository;
 import com.ilevent.ilevent_backend.ticket.entity.Ticket;
@@ -23,10 +20,8 @@ import com.ilevent.ilevent_backend.voucher.entity.Voucher;
 import com.ilevent.ilevent_backend.events.entity.Events;
 import com.ilevent.ilevent_backend.voucherApply.entity.VoucherApply;
 import com.ilevent.ilevent_backend.voucherApply.repository.VoucherApplyRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.Jwt;
+import com.ilevent.ilevent_backend.transaction.dto.PriceCalculationResponseDto;
+import com.ilevent.ilevent_backend.transaction.dto.PriceCalculationRequestDto;
 import org.springframework.stereotype.Service;
 import com.ilevent.ilevent_backend.ticketApply.dto.TicketApplyRequestDto;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,22 +89,24 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         BigDecimal pointsDiscount = BigDecimal.ZERO;
-        if (user.getTotalPoints() > 0) {
+        boolean isPointsUsed = false;
+        if (priceCalculationRequestDto.isUsePoints() && user.getTotalPoints() > 0) {
             BigDecimal maxPointsDiscount = amountAfterDiscount.multiply(BigDecimal.valueOf(0.50));
             BigDecimal pointsToUse = BigDecimal.valueOf(user.getTotalPoints());
             pointsDiscount = pointsToUse.min(maxPointsDiscount);
             amountAfterDiscount = amountAfterDiscount.subtract(pointsDiscount);
-
-            int pointsUsed = pointsDiscount.intValue();
-            user.setTotalPoints(user.getTotalPoints() - pointsUsed);
-            userRepository.save(user);
+            isPointsUsed = true;  // Set flag to true if points were used
+//            int pointsUsed = pointsDiscount.intValue();
+//            user.setTotalPoints(user.getTotalPoints() - pointsUsed);
+//            userRepository.save(user);
+//            isPointsUsed = true;  // Set flag to true if points were used
         }
 
         PriceCalculationResponseDto responseDto = new PriceCalculationResponseDto();
         responseDto.setTotalAmount(totalAmount.doubleValue());
         responseDto.setAmountAfterDiscount(amountAfterDiscount.doubleValue());
         responseDto.setPointsDiscount(pointsDiscount.doubleValue());
-
+        responseDto.setPointsUsed(isPointsUsed);  // Add pointsUsed to response DTO// Add pointsUsed to response DTO
         return responseDto;
     }
 
@@ -127,8 +124,16 @@ public class TransactionServiceImpl implements TransactionService {
         priceCalculationRequestDto.setTickets(transactionRequestDto.getTickets());
         priceCalculationRequestDto.setVouchers(transactionRequestDto.getVouchers());
         priceCalculationRequestDto.setPromoReferralId(transactionRequestDto.getPromoReferralId());
+        priceCalculationRequestDto.setUsePoints(transactionRequestDto.isUsePoints()); // Pass usePoints flag
 
         PriceCalculationResponseDto priceCalculationResponseDto = calculatePrice(priceCalculationRequestDto, email);
+
+        // Mengurangi poin setelah menghitung harga
+        if (priceCalculationResponseDto.isPointsUsed()) {
+            int pointsUsed = BigDecimal.valueOf(priceCalculationResponseDto.getPointsDiscount()).intValue();
+            user.setTotalPoints(user.getTotalPoints() - pointsUsed);
+            userRepository.save(user);
+        }
 
         Events event = eventRepository.findById(transactionRequestDto.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
@@ -141,6 +146,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setPaymentStatus("sukses");
         transaction.setCreatedAt(Instant.now());
         transaction.setUpdatedAt(Instant.now());
+        transaction.setPointsUsed(priceCalculationResponseDto.isPointsUsed());  // Set pointsUsed in transaction
 
         Transaction savedTransaction = transactionRepository.save(transaction);
 
@@ -181,6 +187,7 @@ public class TransactionServiceImpl implements TransactionService {
         responseDto.setTotalAmount(priceCalculationResponseDto.getTotalAmount());
         responseDto.setAmountAfterDiscount(priceCalculationResponseDto.getAmountAfterDiscount());
         responseDto.setPointsDiscount(priceCalculationResponseDto.getPointsDiscount());
+        responseDto.setPointsUsed(priceCalculationResponseDto.isPointsUsed());  // Set pointsUsed in response DTO
         responseDto.setPaymentStatus(transaction.getPaymentStatus());
 
         return responseDto;

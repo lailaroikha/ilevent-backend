@@ -9,4 +9,5 @@ public class TransactionResponseDto {
     private Double amountAfterDiscount;
     private Double pointsDiscount;
     private String paymentStatus;
+    private boolean isPointsUsed;
 }

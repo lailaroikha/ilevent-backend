@@ -14,4 +14,5 @@ public class TransactionRequestDto {
     private Long promoReferralId;
 //    private Double amountAfterDiscount;
     private Double pointsDiscount;
+    private boolean usePoints;
 }

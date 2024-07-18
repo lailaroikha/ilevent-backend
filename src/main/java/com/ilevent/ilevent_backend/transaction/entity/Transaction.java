@@ -52,6 +52,9 @@ public class Transaction {
     @JoinColumn(name = "point_id")
     private PointsHistory point;
 
+    @Column(name = "is_points_used")
+    private Boolean isPointsUsed;
+
     @OneToMany(mappedBy = "transactionId", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TicketApply> ticketApplies = new HashSet<>();
 
@@ -69,4 +72,7 @@ public class Transaction {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+
+    public void setPointsUsed(boolean pointsUsed) {
+    }
 }

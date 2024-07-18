@@ -7,4 +7,5 @@ public class PriceCalculationResponseDto {
     private Double totalAmount;
     private Double amountAfterDiscount;
     private Double pointsDiscount;
+    private boolean isPointsUsed;
 }
