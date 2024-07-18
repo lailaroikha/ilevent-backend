@@ -1,28 +1,34 @@
-//package com.ilevent.ilevent_backend.purchasedTickets.repository;
+package com.ilevent.ilevent_backend.purchasedTickets.repository;
+
+import com.ilevent.ilevent_backend.ticketApply.entity.TicketApply;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+
+@Repository
+public interface PurchasedTicketRepository extends JpaRepository<TicketApply, Long> {
+    @Query("SELECT ta FROM TicketApply ta " +
+            "JOIN ta.transactionId t " +
+            "JOIN t.event e " +
+            "WHERE t.user.id = :userId " +
+            "AND (e.date > CURRENT_DATE " +
+            "OR (e.date = CURRENT_DATE AND e.time > CURRENT_TIME))")
+    List<TicketApply> findUpcomingTicketsByUserId(Long userId);
+
+    @Query("SELECT ta FROM TicketApply ta " +
+            "JOIN ta.transactionId t " +
+            "JOIN t.event e " +
+            "WHERE t.user.id = :userId " +
+            "AND (e.date < CURRENT_DATE " +
+            "OR (e.date = CURRENT_DATE AND e.time <= CURRENT_TIME))")
+    List<TicketApply> findCompletedTicketsByUserId(Long userId);
+}
+
+//    @Query("SELECT ta FROM TicketApply ta WHERE ta.transactionId.user.id = :userId AND ta.transactionId.event.date >= CURRENT_DATE")
+//    List<TicketApply> findUpcomingTicketsByUserId(Long userId);
 //
-//import com.ilevent.ilevent_backend.ticketApply.entity.TicketApply;
-//import com.ilevent.ilevent_backend.users.entity.Users;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.jpa.repository.Query;
-//import org.springframework.data.repository.query.Param;
-//import org.springframework.stereotype.Repository;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//@Repository
-//public interface PurchasedTicketRepository extends JpaRepository<TicketApply, Long> {
-//    @Query("SELECT ta FROM TicketApply ta " +
-//            "JOIN ta.transactionId t " +
-//            "JOIN ta.ticketId ti " +
-//            "JOIN ti.eventId e " +
-//            "WHERE t.user.id = :userId AND e.date > CURRENT_DATE")
-//    List<TicketApply> findUpcomingTickets(@Param("userId") Long userId);
-//
-//    @Query("SELECT ta FROM TicketApply ta " +
-//            "JOIN ta.transactionId t " +
-//            "JOIN ta.ticketId ti " +
-//            "JOIN ti.eventId e " +
-//            "WHERE t.user.id = :userId AND e.date <= CURRENT_DATE")
-//    List<TicketApply> findCompletedTickets(@Param("userId") Long userId);
+//    @Query("SELECT ta FROM TicketApply ta WHERE ta.transactionId.user.id = :userId AND ta.transactionId.event.date < CURRENT_DATE")
+//    List<TicketApply> findCompletedTicketsByUserId(Long userId);
 //}
