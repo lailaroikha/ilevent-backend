@@ -1,7 +1,6 @@
 package com.ilevent.ilevent_backend.events.service;
 
 import com.cloudinary.Cloudinary;
-import com.ilevent.ilevent_backend.config.CloudinaryConfig;
 import org.springframework.stereotype.Service;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;

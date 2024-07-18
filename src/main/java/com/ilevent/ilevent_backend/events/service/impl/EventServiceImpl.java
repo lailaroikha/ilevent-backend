@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -288,36 +287,4 @@ public class EventServiceImpl implements EventService {
 
         return eventsPage.map(CreateEventResponseDto::fromEntity);
     }
-//    @Override
-//    public List<CreateEventResponseDto> getUpcomingEvents(Long userId) {
-//        LocalDateTime now = LocalDateTime.now();
-//        List<Events> events = eventRepository.findUpcomingEventsByUser(userId, now.toLocalDate(), now.toLocalTime());
-//        return events.stream()
-//                .map(this::convertToCreateEventResponseDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<CreateEventResponseDto> getCompletedEvents(Long userId) {
-//        LocalDateTime now = LocalDateTime.now();
-//        List<Events> events = eventRepository.findCompletedEventsByUser(userId, now.toLocalDate(), now.toLocalTime());
-//        return events.stream()
-//                .map(this::convertToCreateEventResponseDto)
-//                .collect(Collectors.toList());
-//    }
-//    private CreateEventResponseDto convertToCreateEventResponseDto(Events event) {
-//        CreateEventResponseDto responseDto = new CreateEventResponseDto();
-//        responseDto.setId(event.getId());
-//        responseDto.setOrganizerId(event.getOrganizer().getId());
-//        responseDto.setName(event.getName());
-//        responseDto.setDescription(event.getDescription());
-//        responseDto.setDate(event.getDate().toString());
-//        responseDto.setTime(event.getTime().toString());
-//        responseDto.setLocation(event.getLocation());
-//        responseDto.setImage(event.getImage());
-//        responseDto.setIsFreeEvent(event.getIsFreeEvent());
-////        responseDto.setCategory(event.getCategory());
-////        responseDto.setRattingRate(event.getRattingRate());
-//        return responseDto;
-//    }
 }

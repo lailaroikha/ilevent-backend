@@ -25,10 +25,3 @@ public interface PurchasedTicketRepository extends JpaRepository<TicketApply, Lo
             "OR (e.date = CURRENT_DATE AND e.time <= CURRENT_TIME))")
     List<TicketApply> findCompletedTicketsByUserId(Long userId);
 }
-
-//    @Query("SELECT ta FROM TicketApply ta WHERE ta.transactionId.user.id = :userId AND ta.transactionId.event.date >= CURRENT_DATE")
-//    List<TicketApply> findUpcomingTicketsByUserId(Long userId);
-//
-//    @Query("SELECT ta FROM TicketApply ta WHERE ta.transactionId.user.id = :userId AND ta.transactionId.event.date < CURRENT_DATE")
-//    List<TicketApply> findCompletedTicketsByUserId(Long userId);
-//}

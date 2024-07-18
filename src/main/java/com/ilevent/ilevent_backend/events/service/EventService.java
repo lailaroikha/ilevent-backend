@@ -19,10 +19,8 @@ public interface EventService {
     List<Events> getEventsByCategory(Events.CategoryType category);
     List<Events> getEventsByDate(LocalDate date);
     List<Events> getEventsByPrice(Boolean isFreeEvent);
-    // Combine filters
     Page<CreateEventResponseDto> getFilteredEvents(Events.CategoryType category, LocalDate date, Boolean isFreeEvent, String location, String keyword, Pageable pageable);
     void deleteEvent(Long id);
-    // Tambahkan metode searchEvents
     List<CreateEventResponseDto> searchEvents(String keyword);
 
 }
